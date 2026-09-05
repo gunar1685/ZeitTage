@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Zeit-Detektiv 🕵️ — Larisas Lernapp</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8b5cf6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zeit-Detektiv">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --pink:#ff6b9d;
+    --purple:#8b5cf6;
+    --blue:#4dabf7;
+    --green:#51cf66;
+    --orange:#ff922b;
+    --yellow:#ffd43b;
+    --bg1:#fff0f6;
+    --bg2:#eef4ff;
+    --dark:#3b2f5e;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    font-family:'Comic Sans MS','Segoe UI',system-ui,sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
+    min-height:100vh;
+    color:var(--dark);
+    padding-bottom:40px;
+  }
+  header{
+    text-align:center;
+    padding:18px 12px 10px;
+  }
+  header h1{
+    margin:0;
+    font-size:1.6rem;
+    color:var(--purple);
+    text-shadow:2px 2px 0 #fff;
+  }
+  header p{margin:4px 0 0;font-size:0.95rem;color:#7a6f9b;}
+
+  nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+    padding:0 10px 14px;
+  }
+  nav button{
+    border:none;
+    border-radius:16px;
+    padding:10px 14px;
+    font-size:0.95rem;
+    font-weight:bold;
+    background:#fff;
+    color:var(--purple);
+    box-shadow:0 3px 0 #d9c9f7;
+    cursor:pointer;
+  }
+  nav button.active{
+    background:var(--purple);
+    color:#fff;
+    box-shadow:0 3px 0 #5b2fa8;
+  }
+
+  main{
+    max-width:520px;
+    margin:0 auto;
+    padding:0 14px;
+  }
+  .card{
+    background:#fff;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 6px 0 #e3d6ff, 0 8px 18px rgba(80,50,150,0.08);
+    margin-bottom:18px;
+  }
+  .section{display:none;}
+  .section.active{display:block;}
+
+  h2{margin-top:0;color:var(--purple);font-size:1.25rem;}
+  h3{color:var(--pink);font-size:1.05rem;margin-bottom:6px;}
+
+  .weekday-strip, .month-strip{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:center;
+    margin:12px 0;
+  }
+  .pill{
+    padding:8px 12px;
+    border-radius:14px;
+    font-weight:bold;
+    font-size:0.9rem;
+    color:#fff;
+  }
+  .pill.weekend{background:var(--orange);}
+  .pill.weekday{background:var(--blue);}
+  .pill.month{background:var(--purple);}
+  .pill.today-highlight{outline:3px solid var(--yellow);}
+
+  .question-box{
+    background:var(--bg2);
+    border-radius:16px;
+    padding:16px;
+    margin:14px 0;
+    font-size:1.15rem;
+    text-align:center;
+    font-weight:bold;
+  }
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .options button{
+    border:none;
+    border-radius:14px;
+    padding:14px 8px;
+    font-size:1.05rem;
+    font-weight:bold;
+    background:var(--blue);
+    color:#fff;
+    box-shadow:0 4px 0 #2c7fc9;
+    cursor:pointer;
+  }
+  .options button:active{transform:translateY(2px);box-shadow:0 2px 0 #2c7fc9;}
+  .options button.correct{background:var(--green);box-shadow:0 4px 0 #2e9e42;}
+  .options button.wrong{background:#ff6b6b;box-shadow:0 4px 0 #c23838;}
+
+  .feedback{
+    min-height:28px;
+    text-align:center;
+    font-size:1.1rem;
+    font-weight:bold;
+    margin-top:8px;
+  }
+  .feedback.ok{color:var(--green);}
+  .feedback.no{color:#e03131;}
+
+  .scorebar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:0.95rem;
+    color:#7a6f9b;
+    margin-bottom:6px;
+  }
+  .scorebar span b{color:var(--purple);}
+
+  .next-btn{
+    display:block;
+    margin:14px auto 0;
+    border:none;
+    border-radius:14px;
+    padding:10px 22px;
+    background:var(--pink);
+    color:#fff;
+    font-weight:bold;
+    font-size:1rem;
+    box-shadow:0 4px 0 #c23c73;
+    cursor:pointer;
+  }
+
+  /* clock */
+  .clock-wrap{display:flex;justify-content:center;margin:14px 0;}
+  svg#clockface{width:220px;height:220px;}
+  .hand{stroke-linecap:round;}
+  .hour-hand{stroke:var(--dark);stroke-width:7;}
+  .minute-hand{stroke:var(--purple);stroke-width:5;}
+
+  .info-list{line-height:1.6;font-size:1rem;}
+  .badge{
+    display:inline-block;
+    background:var(--yellow);
+    color:#5c4a00;
+    padding:2px 8px;
+    border-radius:10px;
+    font-size:0.85rem;
+    font-weight:bold;
+  }
+
+  .mode-toggle{
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    margin-bottom:10px;
+  }
+  .mode-toggle button{
+    border:none;
+    border-radius:10px;
+    padding:6px 12px;
+    font-size:0.85rem;
+    font-weight:bold;
+    background:#eee;
+    color:#666;
+    cursor:pointer;
+  }
+  .mode-toggle button.active{
+    background:var(--purple);
+    color:#fff;
+  }
+
+  .period-indicator{
+    text-align:center;
+    font-size:1.05rem;
+    font-weight:bold;
+    margin-bottom:4px;
+    color:var(--dark);
+  }
+
+  .today-line{
+    text-align:center;
+    font-size:1.05rem;
+    margin:8px 0 16px;
+    background:linear-gradient(90deg,#fff5cc,#ffe8b0);
+    border-radius:14px;
+    padding:10px;
+    font-weight:bold;
+  }
+  .today-line b{color:var(--orange);}
+
+  .hint-btn{
+    display:block;
+    margin:0 auto 10px;
+    border:none;
+    border-radius:12px;
+    padding:6px 16px;
+    font-size:0.85rem;
+    font-weight:bold;
+    background:var(--yellow);
+    color:#5c4a00;
+    cursor:pointer;
+  }
+  .hint-text{
+    background:#fff8e1;
+    border:2px dashed var(--yellow);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:0.9rem;
+    line-height:1.4;
+    margin:0 0 10px;
+    color:#5c4a00;
+  }
+
+  .parent-section{
+    max-width:520px;
+    margin:6px auto 0;
+    padding:0 14px;
+  }
+  .parent-toggle-btn{
+    display:block;
+    width:100%;
+    border:none;
+    border-radius:16px;
+    padding:13px;
+    background:#e4dbf7;
+    color:var(--purple);
+    font-weight:bold;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .parent-panel{
+    background:#fff;
+    border-radius:16px;
+    padding:14px;
+    margin-top:10px;
+    box-shadow:0 4px 0 #e3d6ff;
+    max-height:360px;
+    overflow-y:auto;
+  }
+  .parent-hint{font-size:0.85rem;color:#7a6f9b;margin:0 0 10px;}
+  .parent-entry{
+    border-radius:12px;
+    padding:8px 10px;
+    margin-bottom:8px;
+    font-size:0.9rem;
+    background:#f6f6fb;
+  }
+  .parent-entry.ok{border-left:4px solid var(--green);}
+  .parent-entry.no{border-left:4px solid #ff6b6b;}
+  .parent-entry-top{display:flex;justify-content:space-between;font-weight:bold;font-size:0.78rem;color:#9186ab;margin-bottom:2px;}
+  .parent-question{font-weight:bold;margin-bottom:2px;}
+  .parent-answers{color:#555;}
+  .parent-empty{color:#9186ab;font-size:0.9rem;margin:0;}
+  .parent-clear-btn{
+    display:block;
+    margin:10px auto 0;
+    border:none;
+    border-radius:10px;
+    padding:6px 14px;
+    font-size:0.8rem;
+    font-weight:bold;
+    background:#eee;
+    color:#777;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🕵️ Zeit-Detektiv</h1>
+  <p>Wochentage, Monate, Uhrzeit &amp; mehr üben</p>
+</header>
+
+<nav id="tabnav"></nav>
+
+<main>
+
+  <!-- WOCHENTAGE -->
+  <section class="section" id="sec-weekdays">
+    <div class="card">
+      <h2>📅 Die Wochentage</h2>
+      <div class="weekday-strip" id="weekdayStrip"></div>
+      <p class="info-list">Eine Woche hat <b>7 Tage</b>. Montag bis Freitag sind Schultage (blau), Samstag und Sonntag sind das <span class="badge">Wochenende</span> (orange)!</p>
+    </div>
+    <div class="card">
+      <div class="scorebar"><span>Punkte: <b id="wd-score">0</b></span><span>Frage <b id="wd-num">1</b>/15</span></div>
+      <h3>Quiz: Wochentage</h3>
+      <div class="question-box" id="wd-question">...</div>
+      <button type="button" class="hint-btn" id="wd-hint-btn">💡 Tipp</button>
+      <div class="hint-text" id="wd-hint-text" style="display:none"></div>
+      <div class="options" id="wd-options"></div>
+      <div class="feedback" id="wd-feedback"></div>
+      <button class="next-btn" id="wd-next" style="display:none">Weiter ➡️</button>
+    </div>
+  </section>
+
+  <!-- MONATE -->
+  <section class="section" id="sec-months">
+    <div class="card">
+      <h2>🌸 Die Monate</h2>
+      <div class="month-strip" id="monthStrip"></div>
+      <p class="info-list">Ein Jahr hat <b>12 Monate</b>. Sie beginnen im Winter mit dem Januar und enden im Winter mit dem Dezember.</p>
+    </div>
+    <div class="card">
+      <div class="scorebar"><span>Punkte: <b id="mo-score">0</b></span><span>Frage <b id="mo-num">1</b>/15</span></div>
+      <h3>Quiz: Monate &amp; Jahreszeiten</h3>
+      <div class="question-box" id="mo-question">...</div>
+      <button type="button" class="hint-btn" id="mo-hint-btn">💡 Tipp</button>
+      <div class="hint-text" id="mo-hint-text" style="display:none"></div>
+      <div class="options" id="mo-options"></div>
+      <div class="feedback" id="mo-feedback"></div>
+      <button class="next-btn" id="mo-next" style="display:none">Weiter ➡️</button>
+    </div>
+  </section>
+
+  <!-- UHRZEIT -->
+  <section class="section" id="sec-clock">
+    <div class="card">
+      <h2>🕒 Die Uhrzeit</h2>
+      <p class="info-list">Achte auf <b>Vormittags</b> (☀️) oder <b>Nachmittags</b> (🌆)! Nachmittags rechnet man die Stunde <b>+12</b>, z. B. 3 Uhr nachmittags = <b>15:00 Uhr</b>.</p>
+      <div class="mode-toggle" id="clockLevel">
+        <button data-lvl="1" class="active">Volle &amp; halbe Stunden</button>
+        <button data-lvl="2">Auch 5-Minuten-Schritte</button>
+      </div>
+      <div class="scorebar"><span>Punkte: <b id="cl-score">0</b></span><span>Frage <b id="cl-num">1</b>/15</span></div>
+      <div class="period-indicator" id="cl-period">☀️ Vormittags</div>
+      <div class="clock-wrap">
+        <svg id="clockface" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="95" fill="#fff" stroke="var(--purple)" stroke-width="4"/>
+          <g id="clockNumbers"></g>
+          <line id="hourHand" class="hand hour-hand" x1="100" y1="100" x2="100" y2="55"/>
+          <line id="minuteHand" class="hand minute-hand" x1="100" y1="100" x2="100" y2="35"/>
+          <circle cx="100" cy="100" r="5" fill="var(--dark)"/>
+        </svg>
+      </div>
+      <div class="question-box" id="cl-question">Welche Uhrzeit zeigt die Uhr?</div>
+      <button type="button" class="hint-btn" id="cl-hint-btn">💡 Tipp</button>
+      <div class="hint-text" id="cl-hint-text" style="display:none"></div>
+      <div class="options" id="cl-options"></div>
+      <div class="feedback" id="cl-feedback"></div>
+      <button class="next-btn" id="cl-next" style="display:none">Weiter ➡️</button>
+    </div>
+  </section>
+
+
+</main>
+
+<section class="parent-section">
+  <button type="button" id="parent-toggle" class="parent-toggle-btn">🔒 Für Eltern: Kontrolle anzeigen</button>
+  <div id="parent-panel-body" class="parent-panel" style="display:none">
+    <p class="parent-hint">Hier siehst du alle Fragen &amp; Antworten aus der aktuellen Sitzung (neueste zuerst).</p>
+    <div id="parent-log-list"></div>
+    <button type="button" class="parent-clear-btn" id="parent-clear-btn">Liste leeren</button>
+  </div>
+</section>
+
+<script>
+/* ---------- Tab-Navigation ---------- */
+const tabs = [
+  {id:'sec-weekdays', label:'📅 Wochentage'},
+  {id:'sec-months', label:'🌸 Monate'},
+  {id:'sec-clock', label:'🕒 Uhrzeit'}
+];
+const nav = document.getElementById('tabnav');
+tabs.forEach((t,i)=>{
+  const b = document.createElement('button');
+  b.textContent = t.label;
+  if(i===0) b.classList.add('active');
+  b.onclick = ()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(t.id).classList.add('active');
+  };
+  nav.appendChild(b);
+});
+document.getElementById(tabs[0].id).classList.add('active');
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function pickWrongOptions(correctIndex, pool, count){
+  const opts=new Set();
+  while(opts.size<count){
+    const idx=Math.floor(Math.random()*pool.length);
+    if(idx!==correctIndex) opts.add(idx);
+  }
+  return [...opts];
+}
+
+/* ---------- Daten ---------- */
+const WEEKDAYS = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
+const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+const SEASONS = {
+  "Winter": ["Dezember","Januar","Februar"],
+  "Frühling": ["März","April","Mai"],
+  "Sommer": ["Juni","Juli","August"],
+  "Herbst": ["September","Oktober","November"]
+};
+function seasonOf(month){
+  for(const s in SEASONS){ if(SEASONS[s].includes(month)) return s; }
+}
+
+/* ---------- Wochentage: Strip ---------- */
+const wdStrip = document.getElementById('weekdayStrip');
+WEEKDAYS.forEach((d,i)=>{
+  const s = document.createElement('span');
+  s.className = 'pill ' + (i>=5?'weekend':'weekday');
+  s.textContent = d;
+  wdStrip.appendChild(s);
+});
+
+/* ---------- Monate: Strip ---------- */
+const moStrip = document.getElementById('monthStrip');
+MONTHS.forEach(m=>{
+  const s = document.createElement('span');
+  s.className = 'pill month';
+  s.textContent = m;
+  moStrip.appendChild(s);
+});
+
+/* ============================================================
+   ELTERN-KONTROLLE (Sitzungs-Protokoll)
+   ============================================================ */
+const parentLog = [];
+const PARENT_LOG_MAX = 40;
+function logParentEntry(moduleLabel, questionText, correctLabel, childLabel, isCorrect){
+  parentLog.unshift({moduleLabel, questionText, correctLabel, childLabel, isCorrect});
+  if(parentLog.length > PARENT_LOG_MAX) parentLog.length = PARENT_LOG_MAX;
+  renderParentLog();
+}
+function renderParentLog(){
+  const listEl = document.getElementById('parent-log-list');
+  if(!listEl) return;
+  if(parentLog.length===0){
+    listEl.innerHTML = '<p class="parent-empty">Noch keine beantworteten Fragen in dieser Sitzung.</p>';
+    return;
+  }
+  listEl.innerHTML = parentLog.map(e=>`
+    <div class="parent-entry ${e.isCorrect?'ok':'no'}">
+      <div class="parent-entry-top"><span>${e.moduleLabel}</span><span>${e.isCorrect?'✅ richtig':'❌ falsch'}</span></div>
+      <div class="parent-question">${e.questionText}</div>
+      <div class="parent-answers">Antwort des Kindes: <b>${e.childLabel}</b>${e.isCorrect?'':` &middot; Richtig wäre: <b>${e.correctLabel}</b>`}</div>
+    </div>
+  `).join('');
+}
+renderParentLog();
+document.getElementById('parent-toggle').onclick = ()=>{
+  const panel = document.getElementById('parent-panel-body');
+  const btn = document.getElementById('parent-toggle');
+  const hidden = panel.style.display === 'none';
+  panel.style.display = hidden ? 'block' : 'none';
+  btn.textContent = hidden ? '🔒 Für Eltern: Kontrolle ausblenden' : '🔒 Für Eltern: Kontrolle anzeigen';
+};
+document.getElementById('parent-clear-btn').onclick = ()=>{
+  parentLog.length = 0;
+  renderParentLog();
+};
+
+/* ============================================================
+   GENERIC QUIZ ENGINE
+   ============================================================ */
+function makeQuiz(cfg){
+  // cfg: {prefix, total, genQuestion(), hint(q), parentQuestionText(q), moduleLabel}
+  let score = 0, qNum = 1, currentAnswerLocked = false;
+  let usedKeys = new Set();
+  const scoreEl = document.getElementById(cfg.prefix+'-score');
+  const numEl = document.getElementById(cfg.prefix+'-num');
+  const qEl = document.getElementById(cfg.prefix+'-question');
+  const optEl = document.getElementById(cfg.prefix+'-options');
+  const fbEl = document.getElementById(cfg.prefix+'-feedback');
+  const nextBtn = document.getElementById(cfg.prefix+'-next');
+  const hintBtn = document.getElementById(cfg.prefix+'-hint-btn');
+  const hintTextEl = document.getElementById(cfg.prefix+'-hint-text');
+
+  if(hintBtn){
+    hintBtn.onclick = ()=>{
+      hintTextEl.style.display = hintTextEl.style.display === 'none' ? 'block' : 'none';
+    };
+  }
+
+  function genUniqueQuestion(){
+    let q, attempts = 0;
+    do{
+      q = cfg.genQuestion();
+      attempts++;
+    } while(usedKeys.has(q.key || q.text) && attempts < 60);
+    usedKeys.add(q.key || q.text);
+    return q;
+  }
+
+  function render(){
+    currentAnswerLocked = false;
+    fbEl.textContent = '';
+    fbEl.className = 'feedback';
+    nextBtn.style.display = 'none';
+    numEl.textContent = qNum;
+    const q = genUniqueQuestion();
+    qEl.textContent = q.text;
+    if(cfg.onQuestion) cfg.onQuestion(q);
+    if(hintTextEl){
+      hintTextEl.textContent = cfg.hint ? cfg.hint(q) : '';
+      hintTextEl.style.display = 'none';
+    }
+    optEl.innerHTML = '';
+    const correctOpt = q.options.find(o=>o.correct);
+    q.options.forEach((opt)=>{
+      const b = document.createElement('button');
+      b.textContent = opt.label;
+      b.onclick = ()=>{
+        if(currentAnswerLocked) return;
+        currentAnswerLocked = true;
+        if(opt.correct){
+          b.classList.add('correct');
+          fbEl.textContent = '🎉 Richtig!';
+          fbEl.className = 'feedback ok';
+          score++;
+          scoreEl.textContent = score;
+        } else {
+          b.classList.add('wrong');
+          fbEl.textContent = '❌ Nicht ganz — die richtige Antwort ist markiert.';
+          fbEl.className = 'feedback no';
+          [...optEl.children].forEach(c=>{
+            if(c.textContent === correctOpt.label) c.classList.add('correct');
+          });
+          if(hintTextEl && hintTextEl.textContent){
+            hintTextEl.style.display = 'block';
+          }
+        }
+        const questionForParent = cfg.parentQuestionText ? cfg.parentQuestionText(q) : q.text;
+        logParentEntry(cfg.moduleLabel || cfg.prefix, questionForParent, correctOpt.label, opt.label, !!opt.correct);
+        nextBtn.style.display = 'block';
+      };
+      optEl.appendChild(b);
+    });
+  }
+  nextBtn.onclick = ()=>{
+    qNum++;
+    if(qNum > cfg.total){
+      qNum = 1;
+      score = 0;
+      scoreEl.textContent = 0;
+      usedKeys = new Set();
+    }
+    render();
+  };
+  render();
+}
+
+/* ---------- Wochentage Quiz ---------- */
+const WD_RELATIVE_TERMS = [
+  {label:'gestern', offset:-1},
+  {label:'vorgestern', offset:-2},
+  {label:'morgen', offset:1},
+  {label:'übermorgen', offset:2}
+];
+makeQuiz({
+  prefix:'wd', total:15, moduleLabel:'📅 Wochentage',
+  genQuestion(){
+    const type = Math.floor(Math.random()*4);
+    const i = Math.floor(Math.random()*7);
+    let text, correctLabel, term;
+    if(type===0){
+      text = `Welcher Tag kommt nach ${WEEKDAYS[i]}?`;
+      correctLabel = WEEKDAYS[(i+1)%7];
+    } else if(type===1){
+      text = `Welcher Tag war vor ${WEEKDAYS[i]}?`;
+      correctLabel = WEEKDAYS[(i+6)%7];
+    } else if(type===2){
+      text = `Der wievielte Tag der Woche ist der ${WEEKDAYS[i]}?`;
+      correctLabel = String(i+1);
+    } else {
+      term = WD_RELATIVE_TERMS[Math.floor(Math.random()*WD_RELATIVE_TERMS.length)];
+      const dayIdx = ((i + term.offset) % 7 + 7) % 7;
+      text = `Wenn heute ${WEEKDAYS[i]} ist, welcher Tag ist dann ${term.label}?`;
+      correctLabel = WEEKDAYS[dayIdx];
+    }
+    let optionLabels;
+    if(type===2){
+      const wrongNums = new Set();
+      while(wrongNums.size<3){
+        const n = Math.floor(Math.random()*7)+1;
+        if(n!==(i+1)) wrongNums.add(n);
+      }
+      optionLabels = shuffle([correctLabel, ...[...wrongNums].map(String)]);
+    } else {
+      const wrongIdx = pickWrongOptions(WEEKDAYS.indexOf(correctLabel), WEEKDAYS, 3);
+      optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>WEEKDAYS[w])]);
+    }
+    return {
+      text,
+      _type: type,
+      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+    };
+  },
+  hint(q){
+    if(q._type===0) return 'Denk an die Reihenfolge: Montag → Dienstag → Mittwoch → Donnerstag → Freitag → Samstag → Sonntag. Nach Sonntag geht es wieder bei Montag los!';
+    if(q._type===1) return 'Geh die Woche rückwärts durch: Sonntag → Samstag → Freitag → Donnerstag → Mittwoch → Dienstag → Montag.';
+    if(q._type===2) return 'Zähl ab Montag durch: Montag=1, Dienstag=2, Mittwoch=3, Donnerstag=4, Freitag=5, Samstag=6, Sonntag=7.';
+    return 'Merk dir die Kette: Vorgestern → Gestern → Heute → Morgen → Übermorgen. "Gestern" und "vorgestern" liegen in der Vergangenheit, "morgen" und "übermorgen" in der Zukunft.';
+  }
+});
+
+/* ---------- Monate Quiz ---------- */
+const MONTH_DAYS = {
+  "Januar":31, "Februar":28, "März":31, "April":30, "Mai":31, "Juni":30,
+  "Juli":31, "August":31, "September":30, "Oktober":31, "November":30, "Dezember":31
+};
+makeQuiz({
+  prefix:'mo', total:15, moduleLabel:'🌸 Monate',
+  genQuestion(){
+    const type = Math.floor(Math.random()*4);
+    const i = Math.floor(Math.random()*12);
+    let text, correctLabel, pool;
+    if(type===0){
+      text = `Welcher Monat kommt nach ${MONTHS[i]}?`;
+      correctLabel = MONTHS[(i+1)%12];
+      pool = MONTHS;
+    } else if(type===1){
+      text = `Welcher Monat war vor ${MONTHS[i]}?`;
+      correctLabel = MONTHS[(i+11)%12];
+      pool = MONTHS;
+    } else if(type===2){
+      text = `In welcher Jahreszeit liegt der ${MONTHS[i]}?`;
+      correctLabel = seasonOf(MONTHS[i]);
+      pool = Object.keys(SEASONS);
+    } else {
+      const days = MONTH_DAYS[MONTHS[i]];
+      text = MONTHS[i]==='Februar'
+        ? `Wie viele Tage hat der ${MONTHS[i]} normalerweise?`
+        : `Wie viele Tage hat der ${MONTHS[i]}?`;
+      correctLabel = String(days);
+      pool = ["28","29","30","31"];
+    }
+    const poolIdx = pool.indexOf(correctLabel);
+    const wrongIdx = pickWrongOptions(poolIdx, pool, 3);
+    const optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>pool[w])]);
+    return {
+      text,
+      key: type===3 ? `days-${MONTHS[i]}` : text,
+      _type: type,
+      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+    };
+  },
+  hint(q){
+    if(q._type===0) return 'Die Monate gehen der Reihe nach: Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember — und dann wieder von vorne.';
+    if(q._type===1) return 'Geh die Monatsliste rückwärts durch, dann findest du den Monat davor.';
+    if(q._type===2) return 'Winter: Dezember, Januar, Februar · Frühling: März, April, Mai · Sommer: Juni, Juli, August · Herbst: September, Oktober, November.';
+    return 'Merkspruch: "30 Tage hat September, April, Juni und November. Alle anderen haben 31, nur der Februar hat 28 (im Schaltjahr 29)."';
+  }
+});
+
+/* ---------- Uhr: Zeichnen ---------- */
+const clockNumbers = document.getElementById('clockNumbers');
+for(let n=1;n<=12;n++){
+  const angle = (n*30 - 90) * Math.PI/180;
+  const x = 100 + 78*Math.cos(angle);
+  const y = 100 + 78*Math.sin(angle);
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', x);
+  t.setAttribute('y', y+5);
+  t.setAttribute('text-anchor','middle');
+  t.setAttribute('font-size','14');
+  t.setAttribute('font-weight','bold');
+  t.setAttribute('fill','#3b2f5e');
+  t.textContent = n;
+  clockNumbers.appendChild(t);
+}
+const hourHand = document.getElementById('hourHand');
+const minuteHand = document.getElementById('minuteHand');
+function setClock(hour, minute){
+  const hourAngle = ((hour%12) + minute/60) * 30 - 90;
+  const minuteAngle = minute*6 - 90;
+  const hx = 100 + 45*Math.cos(hourAngle*Math.PI/180);
+  const hy = 100 + 45*Math.sin(hourAngle*Math.PI/180);
+  const mx = 100 + 65*Math.cos(minuteAngle*Math.PI/180);
+  const my = 100 + 65*Math.sin(minuteAngle*Math.PI/180);
+  hourHand.setAttribute('x2', hx);
+  hourHand.setAttribute('y2', hy);
+  minuteHand.setAttribute('x2', mx);
+  minuteHand.setAttribute('y2', my);
+}
+let clockLevel = 1;
+document.querySelectorAll('#clockLevel button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#clockLevel button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    clockLevel = parseInt(b.dataset.lvl,10);
+  };
+});
+function formatTime(h, m){
+  const hh = String(h).padStart(2,'0');
+  const mm = String(m).padStart(2,'0');
+  return `${hh}:${mm} Uhr`;
+}
+function to24Hour(hour12, period){
+  if(period==='vormittag') return hour12===12 ? 0 : hour12;
+  return hour12===12 ? 12 : hour12+12;
+}
+const clPeriodEl = document.getElementById('cl-period');
+makeQuiz({
+  prefix:'cl', total:15, moduleLabel:'🕒 Uhrzeit',
+  genQuestion(){
+    const hour = Math.floor(Math.random()*12)+1;
+    const period = Math.random()<0.5 ? 'vormittag' : 'nachmittag';
+    let minute;
+    if(clockLevel===1){
+      minute = Math.random()<0.5 ? 0 : 30;
+    } else {
+      minute = Math.floor(Math.random()*12)*5;
+    }
+    const hour24 = to24Hour(hour, period);
+    const correctLabel = formatTime(hour24, minute);
+    const wrongLabels = new Set();
+    while(wrongLabels.size<3){
+      const wh24 = Math.floor(Math.random()*24);
+      const wm = clockLevel===1 ? (Math.random()<0.5?0:30) : Math.floor(Math.random()*12)*5;
+      const lbl = formatTime(wh24, wm);
+      if(lbl!==correctLabel) wrongLabels.add(lbl);
+    }
+    const optionLabels = shuffle([correctLabel, ...wrongLabels]);
+    return {
+      text:'', // wird durch das Zifferblatt oben ersetzt
+      key: `${hour}-${minute}-${period}`,
+      _hour: hour, _minute: minute, _period: period, _hour24: hour24,
+      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+    };
+  },
+  onQuestion(q){
+    setClock(q._hour, q._minute);
+    clPeriodEl.textContent = q._period==='vormittag' ? '☀️ Vormittags' : '🌆 Nachmittags';
+  },
+  hint(q){
+    const base = 'Der kurze, dicke Zeiger zeigt die Stunde. Der lange, dünne Zeiger zeigt die Minuten: Steht er auf der 12, ist es eine volle Stunde, steht er auf der 6, ist eine halbe Stunde vergangen.';
+    if(q._period==='vormittag'){
+      return base + ` Vormittags bleibt die Stundenzahl gleich: ${q._hour} Uhr auf der Uhr = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
+    }
+    return base + ` Nachmittags rechnest du +12: ${q._hour} Uhr auf der Uhr + 12 = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
+  },
+  parentQuestionText(q){
+    const periodLabel = q._period==='vormittag' ? 'vormittags' : 'nachmittags';
+    return `Welche Uhrzeit zeigt die Uhr? (angezeigt: ${q._hour} Uhr ${periodLabel}, gefragt im 24h-Format)`;
+  }
+});
+document.getElementById('cl-question').textContent = 'Welche Uhrzeit zeigt die Uhr?';
+
+/* ---------- PWA: Service Worker registrieren ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+</script>
+
+</body>
+</html>

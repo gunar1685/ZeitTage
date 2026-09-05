@@ -1,0 +1,26 @@
+{
+  "name": "Zeit-Detektiv – Wochentage, Monate & Uhrzeit",
+  "short_name": "Zeit-Detektiv",
+  "description": "Lern-App für Kinder: Wochentage, Monate, Uhrzeit sowie gestern/vorgestern/morgen/übermorgen üben.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff0f6",
+  "theme_color": "#8b5cf6",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
