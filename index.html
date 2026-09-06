@@ -798,10 +798,20 @@ makeQuiz({
 });
 document.getElementById('cl-question').textContent = 'Welche Uhrzeit zeigt die Uhr?';
 
-/* ---------- PWA: Service Worker registrieren ---------- */
+/* ---------- PWA: Service Worker registrieren + Auto-Update ---------- */
 if('serviceWorker' in navigator){
+  let swRefreshed = false;
+  // Sobald ein neuer Service Worker die Kontrolle übernimmt, Seite einmal neu laden,
+  // damit sofort die aktuelle Version angezeigt wird (nicht die alte aus dem Cache).
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(swRefreshed) return;
+    swRefreshed = true;
+    window.location.reload();
+  });
   window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    navigator.serviceWorker.register('service-worker.js').then((reg)=>{
+      reg.update();
+    }).catch(()=>{});
   });
 }
 </script>
