@@ -25,43 +25,49 @@
     --dark:#3b2f5e;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{
+    font-size: clamp(14px, 1vw + 10px, 19px);
+  }
   body{
     margin:0;
     font-family:'Comic Sans MS','Segoe UI',system-ui,sans-serif;
     background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
     min-height:100vh;
+    min-height:100dvh;
     color:var(--dark);
-    padding-bottom:40px;
+    padding-bottom:clamp(24px,6vw,40px);
+    overflow-x:hidden;
   }
   header{
     text-align:center;
-    padding:18px 12px 10px;
+    padding:clamp(12px,4vw,18px) 12px clamp(6px,2vw,10px);
   }
   header h1{
     margin:0;
-    font-size:1.6rem;
+    font-size:clamp(1.25rem, 4vw, 1.7rem);
     color:var(--purple);
     text-shadow:2px 2px 0 #fff;
   }
-  header p{margin:4px 0 0;font-size:0.95rem;color:#7a6f9b;}
+  header p{margin:4px 0 0;font-size:clamp(0.8rem, 2.6vw, 0.98rem);color:#7a6f9b;}
 
   nav{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:8px;
-    padding:0 10px 14px;
+    gap:clamp(6px,1.5vw,8px);
+    padding:0 clamp(6px,2vw,10px) clamp(10px,3vw,14px);
   }
   nav button{
     border:none;
     border-radius:16px;
-    padding:10px 14px;
-    font-size:0.95rem;
+    padding:clamp(8px,2.2vw,10px) clamp(10px,3vw,14px);
+    font-size:clamp(0.78rem, 2.4vw, 0.95rem);
     font-weight:bold;
     background:#fff;
     color:var(--purple);
     box-shadow:0 3px 0 #d9c9f7;
     cursor:pointer;
+    white-space:nowrap;
   }
   nav button.active{
     background:var(--purple);
@@ -70,22 +76,22 @@
   }
 
   main{
-    max-width:520px;
+    max-width:min(560px, 94vw);
     margin:0 auto;
-    padding:0 14px;
+    padding:0 clamp(8px,3vw,14px);
   }
   .card{
     background:#fff;
     border-radius:20px;
-    padding:20px;
+    padding:clamp(14px,4.5vw,20px);
     box-shadow:0 6px 0 #e3d6ff, 0 8px 18px rgba(80,50,150,0.08);
-    margin-bottom:18px;
+    margin-bottom:clamp(12px,4vw,18px);
   }
   .section{display:none;}
   .section.active{display:block;}
 
-  h2{margin-top:0;color:var(--purple);font-size:1.25rem;}
-  h3{color:var(--pink);font-size:1.05rem;margin-bottom:6px;}
+  h2{margin-top:0;color:var(--purple);font-size:clamp(1.05rem,3.6vw,1.25rem);}
+  h3{color:var(--pink);font-size:clamp(0.92rem,3vw,1.05rem);margin-bottom:6px;}
 
   .weekday-strip, .month-strip{
     display:flex;
@@ -95,10 +101,10 @@
     margin:12px 0;
   }
   .pill{
-    padding:8px 12px;
+    padding:clamp(6px,2vw,8px) clamp(9px,2.6vw,12px);
     border-radius:14px;
     font-weight:bold;
-    font-size:0.9rem;
+    font-size:clamp(0.75rem,2.4vw,0.9rem);
     color:#fff;
   }
   .pill.weekend{background:var(--orange);}
@@ -109,28 +115,29 @@
   .question-box{
     background:var(--bg2);
     border-radius:16px;
-    padding:16px;
-    margin:14px 0;
-    font-size:1.15rem;
+    padding:clamp(12px,4vw,16px);
+    margin:clamp(10px,3vw,14px) 0;
+    font-size:clamp(0.98rem,3.4vw,1.15rem);
     text-align:center;
     font-weight:bold;
   }
   .options{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:10px;
+    gap:clamp(7px,2.4vw,10px);
     margin-top:10px;
   }
   .options button{
     border:none;
     border-radius:14px;
-    padding:14px 8px;
-    font-size:1.05rem;
+    padding:clamp(10px,3.4vw,14px) clamp(4px,1.5vw,8px);
+    font-size:clamp(0.85rem,3vw,1.05rem);
     font-weight:bold;
     background:var(--blue);
     color:#fff;
     box-shadow:0 4px 0 #2c7fc9;
     cursor:pointer;
+    word-break:break-word;
   }
   .options button:active{transform:translateY(2px);box-shadow:0 2px 0 #2c7fc9;}
   .options button.correct{background:var(--green);box-shadow:0 4px 0 #2e9e42;}
@@ -139,7 +146,7 @@
   .feedback{
     min-height:28px;
     text-align:center;
-    font-size:1.1rem;
+    font-size:clamp(0.95rem,3.2vw,1.1rem);
     font-weight:bold;
     margin-top:8px;
   }
@@ -150,7 +157,7 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    font-size:0.95rem;
+    font-size:clamp(0.82rem,2.6vw,0.95rem);
     color:#7a6f9b;
     margin-bottom:6px;
   }
@@ -161,35 +168,36 @@
     margin:14px auto 0;
     border:none;
     border-radius:14px;
-    padding:10px 22px;
+    padding:clamp(9px,2.8vw,10px) clamp(16px,5vw,22px);
     background:var(--pink);
     color:#fff;
     font-weight:bold;
-    font-size:1rem;
+    font-size:clamp(0.9rem,3vw,1rem);
     box-shadow:0 4px 0 #c23c73;
     cursor:pointer;
   }
 
   /* clock */
   .clock-wrap{display:flex;justify-content:center;margin:14px 0;}
-  svg#clockface{width:220px;height:220px;}
+  svg#clockface{width:min(220px, 52vw);height:auto;}
   .hand{stroke-linecap:round;}
   .hour-hand{stroke:var(--dark);stroke-width:7;}
   .minute-hand{stroke:var(--purple);stroke-width:5;}
 
-  .info-list{line-height:1.6;font-size:1rem;}
+  .info-list{line-height:1.6;font-size:clamp(0.9rem,3vw,1rem);}
   .badge{
     display:inline-block;
     background:var(--yellow);
     color:#5c4a00;
     padding:2px 8px;
     border-radius:10px;
-    font-size:0.85rem;
+    font-size:clamp(0.75rem,2.4vw,0.85rem);
     font-weight:bold;
   }
 
   .mode-toggle{
     display:flex;
+    flex-wrap:wrap;
     gap:6px;
     justify-content:center;
     margin-bottom:10px;
@@ -197,8 +205,8 @@
   .mode-toggle button{
     border:none;
     border-radius:10px;
-    padding:6px 12px;
-    font-size:0.85rem;
+    padding:clamp(5px,1.8vw,6px) clamp(9px,2.8vw,12px);
+    font-size:clamp(0.72rem,2.4vw,0.85rem);
     font-weight:bold;
     background:#eee;
     color:#666;
@@ -211,7 +219,7 @@
 
   .period-indicator{
     text-align:center;
-    font-size:1.05rem;
+    font-size:clamp(0.92rem,3.2vw,1.05rem);
     font-weight:bold;
     margin-bottom:4px;
     color:var(--dark);
@@ -219,7 +227,7 @@
 
   .today-line{
     text-align:center;
-    font-size:1.05rem;
+    font-size:clamp(0.92rem,3.2vw,1.05rem);
     margin:8px 0 16px;
     background:linear-gradient(90deg,#fff5cc,#ffe8b0);
     border-radius:14px;
@@ -233,8 +241,8 @@
     margin:0 auto 10px;
     border:none;
     border-radius:12px;
-    padding:6px 16px;
-    font-size:0.85rem;
+    padding:clamp(5px,1.8vw,6px) clamp(12px,3.6vw,16px);
+    font-size:clamp(0.78rem,2.6vw,0.85rem);
     font-weight:bold;
     background:var(--yellow);
     color:#5c4a00;
@@ -244,45 +252,45 @@
     background:#fff8e1;
     border:2px dashed var(--yellow);
     border-radius:12px;
-    padding:10px 12px;
-    font-size:0.9rem;
+    padding:clamp(8px,3vw,10px) clamp(10px,3.4vw,12px);
+    font-size:clamp(0.85rem,2.8vw,0.9rem);
     line-height:1.4;
     margin:0 0 10px;
     color:#5c4a00;
   }
 
   .parent-section{
-    max-width:520px;
+    max-width:min(560px, 94vw);
     margin:6px auto 0;
-    padding:0 14px;
+    padding:0 clamp(8px,3vw,14px);
   }
   .parent-toggle-btn{
     display:block;
     width:100%;
     border:none;
     border-radius:16px;
-    padding:13px;
+    padding:clamp(11px,3.6vw,13px);
     background:#e4dbf7;
     color:var(--purple);
     font-weight:bold;
-    font-size:0.95rem;
+    font-size:clamp(0.85rem,2.8vw,0.95rem);
     cursor:pointer;
   }
   .parent-panel{
     background:#fff;
     border-radius:16px;
-    padding:14px;
+    padding:clamp(10px,3.6vw,14px);
     margin-top:10px;
     box-shadow:0 4px 0 #e3d6ff;
     max-height:360px;
     overflow-y:auto;
   }
-  .parent-hint{font-size:0.85rem;color:#7a6f9b;margin:0 0 10px;}
+  .parent-hint{font-size:clamp(0.78rem,2.6vw,0.85rem);color:#7a6f9b;margin:0 0 10px;}
   .parent-entry{
     border-radius:12px;
     padding:8px 10px;
     margin-bottom:8px;
-    font-size:0.9rem;
+    font-size:clamp(0.82rem,2.8vw,0.9rem);
     background:#f6f6fb;
   }
   .parent-entry.ok{border-left:4px solid var(--green);}
@@ -324,7 +332,7 @@
       <p class="info-list">Eine Woche hat <b>7 Tage</b>. Montag bis Freitag sind Schultage (blau), Samstag und Sonntag sind das <span class="badge">Wochenende</span> (orange)!</p>
     </div>
     <div class="card">
-      <div class="scorebar"><span>Punkte: <b id="wd-score">0</b></span><span>Frage <b id="wd-num">1</b>/15</span></div>
+      <div class="scorebar"><span>Punkte: <b id="wd-score">0</b></span><span>Frage <b id="wd-num">1</b>/20</span></div>
       <h3>Quiz: Wochentage</h3>
       <div class="question-box" id="wd-question">...</div>
       <button type="button" class="hint-btn" id="wd-hint-btn">💡 Tipp</button>
@@ -343,7 +351,7 @@
       <p class="info-list">Ein Jahr hat <b>12 Monate</b>. Sie beginnen im Winter mit dem Januar und enden im Winter mit dem Dezember.</p>
     </div>
     <div class="card">
-      <div class="scorebar"><span>Punkte: <b id="mo-score">0</b></span><span>Frage <b id="mo-num">1</b>/15</span></div>
+      <div class="scorebar"><span>Punkte: <b id="mo-score">0</b></span><span>Frage <b id="mo-num">1</b>/20</span></div>
       <h3>Quiz: Monate &amp; Jahreszeiten</h3>
       <div class="question-box" id="mo-question">...</div>
       <button type="button" class="hint-btn" id="mo-hint-btn">💡 Tipp</button>
@@ -363,7 +371,7 @@
         <button data-lvl="1" class="active">Volle &amp; halbe Stunden</button>
         <button data-lvl="2">Auch 5-Minuten-Schritte</button>
       </div>
-      <div class="scorebar"><span>Punkte: <b id="cl-score">0</b></span><span>Frage <b id="cl-num">1</b>/15</span></div>
+      <div class="scorebar"><span>Punkte: <b id="cl-score">0</b></span><span>Frage <b id="cl-num">1</b>/20</span></div>
       <div class="period-indicator" id="cl-period">☀️ Vormittags</div>
       <div class="clock-wrap">
         <svg id="clockface" viewBox="0 0 200 200">
@@ -601,7 +609,7 @@ const WD_RELATIVE_TERMS = [
   {label:'übermorgen', offset:2}
 ];
 makeQuiz({
-  prefix:'wd', total:15, moduleLabel:'📅 Wochentage',
+  prefix:'wd', total:20, moduleLabel:'📅 Wochentage',
   genQuestion(){
     const type = Math.floor(Math.random()*4);
     const i = Math.floor(Math.random()*7);
@@ -653,7 +661,7 @@ const MONTH_DAYS = {
   "Juli":31, "August":31, "September":30, "Oktober":31, "November":30, "Dezember":31
 };
 makeQuiz({
-  prefix:'mo', total:15, moduleLabel:'🌸 Monate',
+  prefix:'mo', total:20, moduleLabel:'🌸 Monate',
   genQuestion(){
     const type = Math.floor(Math.random()*4);
     const i = Math.floor(Math.random()*12);
@@ -745,7 +753,7 @@ function to24Hour(hour12, period){
 }
 const clPeriodEl = document.getElementById('cl-period');
 makeQuiz({
-  prefix:'cl', total:15, moduleLabel:'🕒 Uhrzeit',
+  prefix:'cl', total:20, moduleLabel:'🕒 Uhrzeit',
   genQuestion(){
     const hour = Math.floor(Math.random()*12)+1;
     const period = Math.random()<0.5 ? 'vormittag' : 'nachmittag';
