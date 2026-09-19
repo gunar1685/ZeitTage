@@ -1,7 +1,7 @@
 // Bei jeder inhaltlichen Änderung der App diese Versionsnummer erhöhen (v2, v3, ...).
 // Das zwingt Browser dazu, den Service Worker neu zu installieren statt die alte
 // Version aus dem Cache weiterzuverwenden.
-const CACHE_NAME = "zeit-detektiv-cache-v2";
+const CACHE_NAME = "zeit-detektiv-cache-v9";
 const ASSETS = [
   "./",
   "./index.html",

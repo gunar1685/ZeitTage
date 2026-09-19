@@ -12,17 +12,55 @@
 <meta name="apple-mobile-web-app-title" content="Zeit-Detektiv">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --pink:#ff6b9d;
-    --purple:#8b5cf6;
-    --blue:#4dabf7;
-    --green:#51cf66;
-    --orange:#ff922b;
-    --yellow:#ffd43b;
-    --bg1:#fff0f6;
-    --bg2:#eef4ff;
-    --dark:#3b2f5e;
+    --purple:#6c5ce7;
+    --purple-deep:#5847d1;
+    --pink:#ef5fa7;
+    --blue:#3b9eff;
+    --green:#2eb872;
+    --orange:#ff9f43;
+    --yellow:#ffc94d;
+    --bg:#f6f6fb;
+    --surface:#ffffff;
+    --dark:#2a2440;
+    --muted:#79778f;
+    --border:rgba(42,36,64,0.08);
+    --font-display:'Poppins','Segoe UI',system-ui,sans-serif;
+    --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+    --shadow-sm:0 1px 3px rgba(42,36,64,0.08);
+    --shadow-md:0 4px 14px rgba(42,36,64,0.08);
+    --shadow-lg:0 10px 28px rgba(42,36,64,0.10);
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:11px;
+  }
+  /* Saisonale Akzente — die Markenfarbe (Lila) bleibt konstant, nur Zweitfarbe & Hintergrund wechseln dezent */
+  body.theme-summer{ --pink:#ff9f43; --blue:#00bcd4; --bg:#fdf9f0; }
+  body.theme-autumn{ --pink:#e2703a; --blue:#c98a3e; --bg:#fbf3ea; }
+  body.theme-winter{ --pink:#5c7cfa; --blue:#4fb4e8; --bg:#f2f6fc; }
+  /* theme-spring nutzt die Standardfarben aus :root */
+
+  html.font-large{
+    font-size: clamp(17px, 1.3vw + 13px, 23px);
+  }
+  body.high-contrast{
+    --dark:#000000;
+    --bg:#ffffff;
+    --border:#000000;
+  }
+  body.high-contrast .card{
+    border:2px solid #000;
+    box-shadow:none;
+  }
+  body.high-contrast .options button{
+    border:2px solid #000;
+  }
+  body.high-contrast .question-box{
+    border:2px solid #000;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{
@@ -30,8 +68,8 @@
   }
   body{
     margin:0;
-    font-family:'Comic Sans MS','Segoe UI',system-ui,sans-serif;
-    background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
+    font-family:var(--font-body);
+    background:var(--bg);
     min-height:100vh;
     min-height:100dvh;
     color:var(--dark);
@@ -39,59 +77,103 @@
     overflow-x:hidden;
   }
   header{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     text-align:center;
-    padding:clamp(12px,4vw,18px) 12px clamp(6px,2vw,10px);
+    padding:clamp(18px,4.5vw,24px) 16px clamp(12px,3vw,16px);
+    max-width:min(560px, 94vw);
+    margin:0 auto;
   }
   header h1{
     margin:0;
-    font-size:clamp(1.25rem, 4vw, 1.7rem);
-    color:var(--purple);
-    text-shadow:2px 2px 0 #fff;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(1.2rem, 3.8vw, 1.55rem);
+    color:var(--dark);
+    letter-spacing:-0.01em;
   }
-  header p{margin:4px 0 0;font-size:clamp(0.8rem, 2.6vw, 0.98rem);color:#7a6f9b;}
+  header h1 .header-icon{font-size:0.9em;}
+  header p{margin:4px 0 0;font-size:clamp(0.78rem, 2.4vw, 0.9rem);color:var(--muted);font-weight:500;}
 
   nav{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:clamp(6px,1.5vw,8px);
-    padding:0 clamp(6px,2vw,10px) clamp(10px,3vw,14px);
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:2px;
+    max-width:min(560px, 94vw);
+    margin:0 auto clamp(14px,3.5vw,18px);
+    padding:4px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-sm);
   }
   nav button{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
     border:none;
-    border-radius:16px;
-    padding:clamp(8px,2.2vw,10px) clamp(10px,3vw,14px);
-    font-size:clamp(0.78rem, 2.4vw, 0.95rem);
-    font-weight:bold;
-    background:#fff;
-    color:var(--purple);
-    box-shadow:0 3px 0 #d9c9f7;
+    border-radius:10px;
+    padding:clamp(7px,2vw,9px) 2px;
+    background:transparent;
+    color:var(--muted);
     cursor:pointer;
-    white-space:nowrap;
+    transition:background 0.15s ease, color 0.15s ease;
   }
+  nav button .nav-icon{font-size:clamp(1rem,3.4vw,1.2rem);line-height:1;}
+  nav button .nav-label{
+    font-family:var(--font-display);
+    font-size:clamp(0.6rem, 1.9vw, 0.72rem);
+    font-weight:600;
+    line-height:1.15;
+    text-align:center;
+  }
+  nav button:active{opacity:0.75;}
   nav button.active{
-    background:var(--purple);
-    color:#fff;
-    box-shadow:0 3px 0 #5b2fa8;
+    background:var(--bg);
+    color:var(--purple);
   }
 
   main{
     max-width:min(560px, 94vw);
     margin:0 auto;
-    padding:0 clamp(8px,3vw,14px);
   }
   .card{
-    background:#fff;
-    border-radius:20px;
-    padding:clamp(14px,4.5vw,20px);
-    box-shadow:0 6px 0 #e3d6ff, 0 8px 18px rgba(80,50,150,0.08);
+    background:var(--surface);
+    border-radius:var(--radius-lg);
+    padding:clamp(16px,4.5vw,22px);
+    box-shadow:var(--shadow-md);
     margin-bottom:clamp(12px,4vw,18px);
+    border:1px solid var(--border);
   }
   .section{display:none;}
-  .section.active{display:block;}
+  .section.active{display:block;animation:section-fade-in 0.22s ease;}
+  @keyframes section-fade-in{
+    from{opacity:0;transform:translateY(4px);}
+    to{opacity:1;transform:translateY(0);}
+  }
 
-  h2{margin-top:0;color:var(--purple);font-size:clamp(1.05rem,3.6vw,1.25rem);}
-  h3{color:var(--pink);font-size:clamp(0.92rem,3vw,1.05rem);margin-bottom:6px;}
+  h2{
+    margin:0 0 10px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--dark);
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(1.05rem,3.4vw,1.22rem);
+  }
+  h3{
+    color:var(--dark);
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(0.9rem,2.8vw,1.02rem);
+    margin:0 0 10px;
+  }
 
   .weekday-strip, .month-strip{
     display:flex;
@@ -102,213 +184,342 @@
   }
   .pill{
     padding:clamp(6px,2vw,8px) clamp(9px,2.6vw,12px);
-    border-radius:14px;
-    font-weight:bold;
-    font-size:clamp(0.75rem,2.4vw,0.9rem);
+    border-radius:var(--radius-sm);
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(0.74rem,2.3vw,0.87rem);
     color:#fff;
   }
   .pill.weekend{background:var(--orange);}
   .pill.weekday{background:var(--blue);}
   .pill.month{background:var(--purple);}
-  .pill.today-highlight{outline:3px solid var(--yellow);}
 
   .question-box{
-    background:var(--bg2);
-    border-radius:16px;
-    padding:clamp(12px,4vw,16px);
+    background:var(--bg);
+    border-radius:var(--radius-md);
+    padding:clamp(13px,4vw,17px);
     margin:clamp(10px,3vw,14px) 0;
-    font-size:clamp(0.98rem,3.4vw,1.15rem);
+    font-size:clamp(0.96rem,3.2vw,1.12rem);
     text-align:center;
-    font-weight:bold;
+    font-weight:700;
+    border:1px solid var(--border);
   }
   .options{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:clamp(7px,2.4vw,10px);
+    gap:clamp(8px,2.6vw,11px);
     margin-top:10px;
   }
   .options button{
     border:none;
-    border-radius:14px;
-    padding:clamp(10px,3.4vw,14px) clamp(4px,1.5vw,8px);
-    font-size:clamp(0.85rem,3vw,1.05rem);
-    font-weight:bold;
+    border-radius:var(--radius-sm);
+    padding:clamp(11px,3.6vw,15px) clamp(4px,1.5vw,8px);
+    font-size:clamp(0.84rem,2.9vw,1.02rem);
+    font-weight:700;
     background:var(--blue);
     color:#fff;
-    box-shadow:0 4px 0 #2c7fc9;
+    box-shadow:var(--shadow-sm);
     cursor:pointer;
     word-break:break-word;
+    transition:transform 0.1s ease, opacity 0.12s ease, background 0.15s ease;
   }
-  .options button:active{transform:translateY(2px);box-shadow:0 2px 0 #2c7fc9;}
-  .options button.correct{background:var(--green);box-shadow:0 4px 0 #2e9e42;}
-  .options button.wrong{background:#ff6b6b;box-shadow:0 4px 0 #c23838;}
+  .options button:active{transform:scale(0.97);opacity:0.92;}
+  .options button.correct{background:var(--green);}
+  .options button.wrong{background:#e8506a;}
 
   .feedback{
     min-height:28px;
     text-align:center;
-    font-size:clamp(0.95rem,3.2vw,1.1rem);
-    font-weight:bold;
+    font-size:clamp(0.92rem,3vw,1.05rem);
+    font-weight:700;
     margin-top:8px;
   }
   .feedback.ok{color:var(--green);}
-  .feedback.no{color:#e03131;}
+  .feedback.no{color:#e8506a;}
 
   .scorebar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    font-size:clamp(0.82rem,2.6vw,0.95rem);
-    color:#7a6f9b;
-    margin-bottom:6px;
+    font-size:clamp(0.78rem,2.4vw,0.9rem);
+    color:var(--muted);
+    font-weight:600;
+    margin-bottom:8px;
   }
   .scorebar span b{color:var(--purple);}
+
+  .progress-outer{
+    background:var(--border);
+    border-radius:20px;
+    height:7px;
+    overflow:hidden;
+    margin-bottom:14px;
+  }
+  .progress-inner{
+    height:100%;
+    width:0%;
+    background:var(--purple);
+    border-radius:20px;
+    transition:width 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-inner.review{
+    background:var(--orange);
+  }
+
+  .round-complete{
+    position:relative;
+    text-align:center;
+    padding:6px 0 4px;
+    overflow:hidden;
+    min-height:180px;
+  }
+  .round-complete h3{color:var(--purple);font-family:var(--font-display);font-weight:700;font-size:clamp(1.15rem,3.8vw,1.35rem);margin:6px 0 4px;border:none;}
+  .round-complete p{font-size:clamp(0.92rem,3vw,1.02rem);margin:0 0 8px;font-weight:600;color:var(--muted);}
+  .stars{font-size:clamp(1.6rem,6.5vw,2.15rem);margin-bottom:6px;letter-spacing:5px;}
+  .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .confetti-piece{
+    position:absolute;
+    top:-24px;
+    font-size:1.3rem;
+    animation:confetti-fall 1.9s ease-in forwards;
+  }
+  @keyframes confetti-fall{
+    to{ transform:translateY(220px) rotate(360deg); opacity:0; }
+  }
 
   .next-btn{
     display:block;
     margin:14px auto 0;
     border:none;
-    border-radius:14px;
-    padding:clamp(9px,2.8vw,10px) clamp(16px,5vw,22px);
-    background:var(--pink);
+    border-radius:var(--radius-sm);
+    padding:clamp(10px,3vw,12px) clamp(18px,5.5vw,24px);
+    background:var(--purple);
     color:#fff;
-    font-weight:bold;
-    font-size:clamp(0.9rem,3vw,1rem);
-    box-shadow:0 4px 0 #c23c73;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(0.88rem,2.9vw,0.98rem);
+    box-shadow:var(--shadow-sm);
     cursor:pointer;
+    transition:transform 0.1s ease, opacity 0.12s ease;
   }
+  .next-btn:active{transform:scale(0.97);opacity:0.92;}
 
   /* clock */
   .clock-wrap{display:flex;justify-content:center;margin:14px 0;}
-  svg#clockface{width:min(220px, 52vw);height:auto;}
-  .hand{stroke-linecap:round;}
-  .hour-hand{stroke:var(--dark);stroke-width:7;}
-  .minute-hand{stroke:var(--purple);stroke-width:5;}
+  svg#clockface, svg#mx-clockface, svg#cl-set-clockface{width:min(220px, 52vw);height:auto;touch-action:none;}
+  .hand{stroke-linecap:round;pointer-events:none;}
+  .hour-hand{stroke:var(--dark);stroke-width:6;}
+  .minute-hand{stroke:var(--purple);stroke-width:4;}
+  .hand-knob{cursor:grab;touch-action:none;}
+  .hand-knob.hour-knob{fill:var(--dark);stroke:#fff;stroke-width:2;}
+  .hand-knob.minute-knob{fill:var(--purple);stroke:#fff;stroke-width:2;}
+  .hand-knob:active{cursor:grabbing;}
 
-  .info-list{line-height:1.6;font-size:clamp(0.9rem,3vw,1rem);}
+  .tts-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:50%;
+    width:clamp(30px,8vw,36px);
+    height:clamp(30px,8vw,36px);
+    background:var(--blue);
+    color:#fff;
+    font-size:clamp(0.9rem,3vw,1.1rem);
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    margin-left:8px;
+    vertical-align:middle;
+    transition:transform 0.1s ease;
+  }
+  .tts-btn:active{transform:scale(0.92);}
+  .question-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+  }
+  .question-row .question-box{flex:1;margin:14px 0;}
+
+  .clock-set-wrap{text-align:center;margin:10px 0;}
+  .clock-target{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:11px 14px;
+    font-weight:700;
+    font-size:clamp(0.92rem,3vw,1.05rem);
+    margin-bottom:10px;
+  }
+  .clock-check-btn{
+    display:block;
+    margin:12px auto 0;
+    border:none;
+    border-radius:var(--radius-sm);
+    padding:clamp(10px,3vw,12px) clamp(18px,5.5vw,24px);
+    background:var(--green);
+    color:#fff;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(0.88rem,2.9vw,0.98rem);
+    box-shadow:var(--shadow-sm);
+    cursor:pointer;
+    transition:transform 0.1s ease, opacity 0.12s ease;
+  }
+  .clock-check-btn:active{transform:scale(0.97);opacity:0.92;}
+
+  .info-list{line-height:1.6;font-size:clamp(0.88rem,2.8vw,0.98rem);color:var(--muted);}
+  .info-list b{color:var(--dark);}
   .badge{
     display:inline-block;
     background:var(--yellow);
     color:#5c4a00;
     padding:2px 8px;
     border-radius:10px;
-    font-size:clamp(0.75rem,2.4vw,0.85rem);
-    font-weight:bold;
+    font-size:clamp(0.72rem,2.3vw,0.82rem);
+    font-weight:700;
   }
+
+  .settings-row{
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .settings-row-last{border-bottom:none;padding-bottom:2px;}
+  .settings-row-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(0.88rem,2.8vw,1rem);
+    color:var(--dark);
+    margin-bottom:10px;
+  }
+  .settings-row-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    border-radius:9px;
+    background:var(--bg);
+    font-size:0.95rem;
+  }
+  .settings-row .mode-toggle{margin-bottom:0;}
 
   .mode-toggle{
     display:flex;
     flex-wrap:wrap;
     gap:6px;
     justify-content:center;
-    margin-bottom:10px;
+    margin-bottom:12px;
+    background:var(--bg);
+    border-radius:var(--radius-sm);
+    padding:4px;
   }
   .mode-toggle button{
     border:none;
-    border-radius:10px;
-    padding:clamp(5px,1.8vw,6px) clamp(9px,2.8vw,12px);
-    font-size:clamp(0.72rem,2.4vw,0.85rem);
-    font-weight:bold;
-    background:#eee;
-    color:#666;
+    border-radius:8px;
+    padding:clamp(6px,2vw,7px) clamp(10px,3vw,13px);
+    font-size:clamp(0.7rem,2.3vw,0.82rem);
+    font-weight:600;
+    background:transparent;
+    color:var(--muted);
     cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
   }
+  .mode-toggle button:active{opacity:0.8;}
   .mode-toggle button.active{
-    background:var(--purple);
-    color:#fff;
+    background:var(--surface);
+    color:var(--purple);
+    box-shadow:var(--shadow-sm);
   }
 
   .period-indicator{
     text-align:center;
-    font-size:clamp(0.92rem,3.2vw,1.05rem);
-    font-weight:bold;
+    font-size:clamp(0.9rem,3vw,1.02rem);
+    font-weight:700;
     margin-bottom:4px;
     color:var(--dark);
   }
-
-  .today-line{
-    text-align:center;
-    font-size:clamp(0.92rem,3.2vw,1.05rem);
-    margin:8px 0 16px;
-    background:linear-gradient(90deg,#fff5cc,#ffe8b0);
-    border-radius:14px;
-    padding:10px;
-    font-weight:bold;
-  }
-  .today-line b{color:var(--orange);}
 
   .hint-btn{
     display:block;
     margin:0 auto 10px;
     border:none;
-    border-radius:12px;
-    padding:clamp(5px,1.8vw,6px) clamp(12px,3.6vw,16px);
-    font-size:clamp(0.78rem,2.6vw,0.85rem);
-    font-weight:bold;
-    background:var(--yellow);
-    color:#5c4a00;
+    border-radius:var(--radius-sm);
+    padding:clamp(6px,2vw,7px) clamp(13px,3.8vw,17px);
+    font-size:clamp(0.76rem,2.5vw,0.83rem);
+    font-weight:700;
+    background:#fff3d6;
+    color:#8a6300;
     cursor:pointer;
+    transition:transform 0.1s ease;
   }
+  .hint-btn:active{transform:scale(0.97);}
   .hint-text{
-    background:#fff8e1;
-    border:2px dashed var(--yellow);
-    border-radius:12px;
+    background:#fffaef;
+    border:1px solid #f2ddaa;
+    border-radius:var(--radius-sm);
     padding:clamp(8px,3vw,10px) clamp(10px,3.4vw,12px);
-    font-size:clamp(0.85rem,2.8vw,0.9rem);
-    line-height:1.4;
+    font-size:clamp(0.83rem,2.7vw,0.88rem);
+    line-height:1.45;
     margin:0 0 10px;
-    color:#5c4a00;
+    color:#7a5d00;
   }
 
   .parent-section{
     max-width:min(560px, 94vw);
     margin:6px auto 0;
-    padding:0 clamp(8px,3vw,14px);
   }
   .parent-toggle-btn{
     display:block;
     width:100%;
     border:none;
-    border-radius:16px;
+    border-radius:var(--radius-md);
     padding:clamp(11px,3.6vw,13px);
-    background:#e4dbf7;
+    background:var(--surface);
+    border:1px solid var(--border);
     color:var(--purple);
-    font-weight:bold;
-    font-size:clamp(0.85rem,2.8vw,0.95rem);
+    font-weight:700;
+    font-size:clamp(0.84rem,2.7vw,0.93rem);
     cursor:pointer;
+    transition:opacity 0.12s ease;
   }
+  .parent-toggle-btn:active{opacity:0.85;}
   .parent-panel{
-    background:#fff;
-    border-radius:16px;
+    background:var(--surface);
+    border-radius:var(--radius-md);
     padding:clamp(10px,3.6vw,14px);
     margin-top:10px;
-    box-shadow:0 4px 0 #e3d6ff;
+    box-shadow:var(--shadow-md);
     max-height:360px;
     overflow-y:auto;
   }
-  .parent-hint{font-size:clamp(0.78rem,2.6vw,0.85rem);color:#7a6f9b;margin:0 0 10px;}
+  .parent-hint{font-size:clamp(0.76rem,2.5vw,0.83rem);color:var(--muted);margin:0 0 10px;}
   .parent-entry{
-    border-radius:12px;
+    border-radius:var(--radius-sm);
     padding:8px 10px;
     margin-bottom:8px;
-    font-size:clamp(0.82rem,2.8vw,0.9rem);
-    background:#f6f6fb;
+    font-size:clamp(0.8rem,2.7vw,0.88rem);
+    background:var(--bg);
   }
-  .parent-entry.ok{border-left:4px solid var(--green);}
-  .parent-entry.no{border-left:4px solid #ff6b6b;}
-  .parent-entry-top{display:flex;justify-content:space-between;font-weight:bold;font-size:0.78rem;color:#9186ab;margin-bottom:2px;}
-  .parent-question{font-weight:bold;margin-bottom:2px;}
-  .parent-answers{color:#555;}
-  .parent-empty{color:#9186ab;font-size:0.9rem;margin:0;}
+  .parent-entry.ok{border-left:3px solid var(--green);}
+  .parent-entry.no{border-left:3px solid #e8506a;}
+  .parent-entry-top{display:flex;justify-content:space-between;font-weight:700;font-size:0.76rem;color:var(--muted);margin-bottom:2px;}
+  .parent-question{font-weight:700;margin-bottom:2px;}
+  .parent-answers{color:var(--muted);}
+  .parent-empty{color:var(--muted);font-size:0.88rem;margin:0;}
   .parent-clear-btn{
     display:block;
     margin:10px auto 0;
     border:none;
     border-radius:10px;
     padding:6px 14px;
-    font-size:0.8rem;
-    font-weight:bold;
-    background:#eee;
-    color:#777;
+    font-size:0.78rem;
+    font-weight:700;
+    background:var(--bg);
+    color:var(--muted);
     cursor:pointer;
   }
 </style>
@@ -316,7 +527,7 @@
 <body>
 
 <header>
-  <h1>🕵️ Zeit-Detektiv</h1>
+  <h1><span class="header-icon">🕵️</span>Zeit-Detektiv</h1>
   <p>Wochentage, Monate, Uhrzeit &amp; mehr üben</p>
 </header>
 
@@ -332,14 +543,28 @@
       <p class="info-list">Eine Woche hat <b>7 Tage</b>. Montag bis Freitag sind Schultage (blau), Samstag und Sonntag sind das <span class="badge">Wochenende</span> (orange)!</p>
     </div>
     <div class="card">
-      <div class="scorebar"><span>Punkte: <b id="wd-score">0</b></span><span>Frage <b id="wd-num">1</b>/20</span></div>
       <h3>Quiz: Wochentage</h3>
-      <div class="question-box" id="wd-question">...</div>
-      <button type="button" class="hint-btn" id="wd-hint-btn">💡 Tipp</button>
-      <div class="hint-text" id="wd-hint-text" style="display:none"></div>
-      <div class="options" id="wd-options"></div>
-      <div class="feedback" id="wd-feedback"></div>
-      <button class="next-btn" id="wd-next" style="display:none">Weiter ➡️</button>
+      <div class="mode-toggle" id="wdLevel">
+        <button type="button" data-lvl="1" class="active">Leicht</button>
+        <button type="button" data-lvl="2">Schwer (mit Rechnen)</button>
+      </div>
+      <div class="scorebar"><span>Punkte: <b id="wd-score">0</b></span><span id="wd-progress-label">Frage <b id="wd-num">1</b>/20</span></div>
+      <div class="progress-outer"><div class="progress-inner" id="wd-progress"></div></div>
+      <div id="wd-quiz-body">
+        <div class="question-row"><div class="question-box" id="wd-question">...</div><button type="button" class="tts-btn" id="wd-tts-btn" aria-label="Frage vorlesen">🔊</button></div>
+        <button type="button" class="hint-btn" id="wd-hint-btn">💡 Tipp</button>
+        <div class="hint-text" id="wd-hint-text" style="display:none"></div>
+        <div class="options" id="wd-options"></div>
+        <div class="feedback" id="wd-feedback"></div>
+        <button class="next-btn" id="wd-next" style="display:none">Weiter ➡️</button>
+      </div>
+      <div class="round-complete" id="wd-complete" style="display:none">
+        <div class="confetti" id="wd-confetti"></div>
+        <h3>🎉 Runde geschafft!</h3>
+        <p id="wd-complete-text"></p>
+        <div class="stars" id="wd-stars"></div>
+        <button class="next-btn" id="wd-restart">Nochmal spielen 🔄</button>
+      </div>
     </div>
   </section>
 
@@ -351,14 +576,28 @@
       <p class="info-list">Ein Jahr hat <b>12 Monate</b>. Sie beginnen im Winter mit dem Januar und enden im Winter mit dem Dezember.</p>
     </div>
     <div class="card">
-      <div class="scorebar"><span>Punkte: <b id="mo-score">0</b></span><span>Frage <b id="mo-num">1</b>/20</span></div>
       <h3>Quiz: Monate &amp; Jahreszeiten</h3>
-      <div class="question-box" id="mo-question">...</div>
-      <button type="button" class="hint-btn" id="mo-hint-btn">💡 Tipp</button>
-      <div class="hint-text" id="mo-hint-text" style="display:none"></div>
-      <div class="options" id="mo-options"></div>
-      <div class="feedback" id="mo-feedback"></div>
-      <button class="next-btn" id="mo-next" style="display:none">Weiter ➡️</button>
+      <div class="mode-toggle" id="moLevel">
+        <button type="button" data-lvl="1" class="active">Leicht</button>
+        <button type="button" data-lvl="2">Schwer (Tage &amp; Zahlen)</button>
+      </div>
+      <div class="scorebar"><span>Punkte: <b id="mo-score">0</b></span><span id="mo-progress-label">Frage <b id="mo-num">1</b>/20</span></div>
+      <div class="progress-outer"><div class="progress-inner" id="mo-progress"></div></div>
+      <div id="mo-quiz-body">
+        <div class="question-row"><div class="question-box" id="mo-question">...</div><button type="button" class="tts-btn" id="mo-tts-btn" aria-label="Frage vorlesen">🔊</button></div>
+        <button type="button" class="hint-btn" id="mo-hint-btn">💡 Tipp</button>
+        <div class="hint-text" id="mo-hint-text" style="display:none"></div>
+        <div class="options" id="mo-options"></div>
+        <div class="feedback" id="mo-feedback"></div>
+        <button class="next-btn" id="mo-next" style="display:none">Weiter ➡️</button>
+      </div>
+      <div class="round-complete" id="mo-complete" style="display:none">
+        <div class="confetti" id="mo-confetti"></div>
+        <h3>🎉 Runde geschafft!</h3>
+        <p id="mo-complete-text"></p>
+        <div class="stars" id="mo-stars"></div>
+        <button class="next-btn" id="mo-restart">Nochmal spielen 🔄</button>
+      </div>
     </div>
   </section>
 
@@ -368,10 +607,16 @@
       <h2>🕒 Die Uhrzeit</h2>
       <p class="info-list">Achte auf <b>Vormittags</b> (☀️) oder <b>Nachmittags</b> (🌆)! Nachmittags rechnet man die Stunde <b>+12</b>, z. B. 3 Uhr nachmittags = <b>15:00 Uhr</b>.</p>
       <div class="mode-toggle" id="clockLevel">
-        <button data-lvl="1" class="active">Volle &amp; halbe Stunden</button>
-        <button data-lvl="2">Auch 5-Minuten-Schritte</button>
+        <button type="button" data-lvl="1" class="active">Volle &amp; halbe Stunden</button>
+        <button type="button" data-lvl="2">Auch 5-Minuten-Schritte</button>
       </div>
-      <div class="scorebar"><span>Punkte: <b id="cl-score">0</b></span><span>Frage <b id="cl-num">1</b>/20</span></div>
+      <div class="mode-toggle" id="clockMode">
+        <button type="button" data-val="read" class="active">🔎 Ablesen (Quiz)</button>
+        <button type="button" data-val="set">🖐️ Zeiger selbst stellen</button>
+      </div>
+      <div class="scorebar"><span>Punkte: <b id="cl-score">0</b></span><span id="cl-progress-label">Frage <b id="cl-num">1</b>/20</span></div>
+      <div class="progress-outer"><div class="progress-inner" id="cl-progress"></div></div>
+      <div id="cl-quiz-body">
       <div class="period-indicator" id="cl-period">☀️ Vormittags</div>
       <div class="clock-wrap">
         <svg id="clockface" viewBox="0 0 200 200">
@@ -382,15 +627,131 @@
           <circle cx="100" cy="100" r="5" fill="var(--dark)"/>
         </svg>
       </div>
-      <div class="question-box" id="cl-question">Welche Uhrzeit zeigt die Uhr?</div>
+      <div class="question-row"><div class="question-box" id="cl-question">Welche Uhrzeit zeigt die Uhr?</div><button type="button" class="tts-btn" id="cl-tts-btn" aria-label="Frage vorlesen">🔊</button></div>
       <button type="button" class="hint-btn" id="cl-hint-btn">💡 Tipp</button>
       <div class="hint-text" id="cl-hint-text" style="display:none"></div>
       <div class="options" id="cl-options"></div>
       <div class="feedback" id="cl-feedback"></div>
       <button class="next-btn" id="cl-next" style="display:none">Weiter ➡️</button>
+      </div>
+      <div class="round-complete" id="cl-complete" style="display:none">
+        <div class="confetti" id="cl-confetti"></div>
+        <h3>🎉 Runde geschafft!</h3>
+        <p id="cl-complete-text"></p>
+        <div class="stars" id="cl-stars"></div>
+        <button class="next-btn" id="cl-restart">Nochmal spielen 🔄</button>
+      </div>
+      <div id="cl-set-body" style="display:none">
+        <div class="clock-set-wrap">
+          <div class="clock-target" id="cl-set-target">Stelle die Uhr ein …</div>
+          <div class="clock-wrap">
+            <svg id="cl-set-clockface" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="95" fill="#fff" stroke="var(--purple)" stroke-width="4"/>
+              <g id="cl-set-clockNumbers"></g>
+              <line id="cl-set-hourHand" class="hand hour-hand" x1="100" y1="100" x2="100" y2="55"/>
+              <line id="cl-set-minuteHand" class="hand minute-hand" x1="100" y1="100" x2="100" y2="35"/>
+              <circle cx="100" cy="100" r="5" fill="var(--dark)"/>
+              <circle id="cl-set-hourKnob" class="hand-knob hour-knob draggable" cx="100" cy="55" r="11"/>
+              <circle id="cl-set-minuteKnob" class="hand-knob minute-knob draggable" cx="100" cy="35" r="9"/>
+            </svg>
+          </div>
+          <p class="info-list">Ziehe die <b>Knöpfe</b> an den Zeigerspitzen mit dem Finger oder der Maus an die richtige Stelle.</p>
+          <div class="feedback" id="cl-set-feedback"></div>
+          <button type="button" class="clock-check-btn" id="cl-set-check">Prüfen ✅</button>
+          <button type="button" class="next-btn" id="cl-set-next" style="display:none">Neue Uhrzeit 🔄</button>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- GEMISCHT -->
+  <section class="section" id="sec-mixed">
+    <div class="card">
+      <h2>🔀 Alles gemischt</h2>
+      <p class="info-list">Hier kommen Fragen zu Wochentagen, Monaten <b>und</b> der Uhrzeit bunt durcheinander!</p>
+    </div>
+    <div class="card">
+      <h3>Quiz: Gemischt</h3>
+      <div class="scorebar"><span>Punkte: <b id="mx-score">0</b></span><span id="mx-progress-label">Frage <b id="mx-num">1</b>/20</span></div>
+      <div class="progress-outer"><div class="progress-inner" id="mx-progress"></div></div>
+      <div id="mx-quiz-body">
+        <div class="period-indicator" id="mx-period" style="display:none">☀️ Vormittags</div>
+        <div class="clock-wrap" id="mx-clock-wrap" style="display:none">
+          <svg id="mx-clockface" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="95" fill="#fff" stroke="var(--purple)" stroke-width="4"/>
+            <g id="mx-clockNumbers"></g>
+            <line id="mx-hourHand" class="hand hour-hand" x1="100" y1="100" x2="100" y2="55"/>
+            <line id="mx-minuteHand" class="hand minute-hand" x1="100" y1="100" x2="100" y2="35"/>
+            <circle cx="100" cy="100" r="5" fill="var(--dark)"/>
+          </svg>
+        </div>
+        <div class="question-row"><div class="question-box" id="mx-question">...</div><button type="button" class="tts-btn" id="mx-tts-btn" aria-label="Frage vorlesen">🔊</button></div>
+        <button type="button" class="hint-btn" id="mx-hint-btn">💡 Tipp</button>
+        <div class="hint-text" id="mx-hint-text" style="display:none"></div>
+        <div class="options" id="mx-options"></div>
+        <div class="feedback" id="mx-feedback"></div>
+        <button class="next-btn" id="mx-next" style="display:none">Weiter ➡️</button>
+      </div>
+      <div class="round-complete" id="mx-complete" style="display:none">
+        <div class="confetti" id="mx-confetti"></div>
+        <h3>🎉 Runde geschafft!</h3>
+        <p id="mx-complete-text"></p>
+        <div class="stars" id="mx-stars"></div>
+        <button class="next-btn" id="mx-restart">Nochmal spielen 🔄</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EINSTELLUNGEN -->
+  <section class="section" id="sec-settings">
+    <div class="card">
+      <h2>⚙️ Einstellungen</h2>
+      <p class="info-list" style="margin-top:0;">Diese Einstellungen werden auf diesem Gerät gespeichert.</p>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span class="settings-row-icon">🔊</span>Sprachausgabe</div>
+        <div class="mode-toggle" id="settingTTS">
+          <button type="button" data-val="off" class="active">Aus</button>
+          <button type="button" data-val="auto">Automatisch vorlesen</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span class="settings-row-icon">🔤</span>Schriftgröße</div>
+        <div class="mode-toggle" id="settingFontSize">
+          <button type="button" data-val="normal" class="active">Normal</button>
+          <button type="button" data-val="large">Groß</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span class="settings-row-icon">🌓</span>Kontrast</div>
+        <div class="mode-toggle" id="settingContrast">
+          <button type="button" data-val="normal" class="active">Normal</button>
+          <button type="button" data-val="high">Hoher Kontrast</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span class="settings-row-icon">🕒</span>Uhrzeit-Format</div>
+        <div class="mode-toggle" id="settingClockFormat">
+          <button type="button" data-val="24h" class="active">24h (Vor-/Nachmittag)</button>
+          <button type="button" data-val="12h">12h (einfach)</button>
+        </div>
+      </div>
+
+      <div class="settings-row settings-row-last">
+        <div class="settings-row-label"><span class="settings-row-icon">🎨</span>Farbthema</div>
+        <div class="mode-toggle" id="settingTheme">
+          <button type="button" data-val="auto" class="active">Automatisch</button>
+          <button type="button" data-val="spring">🌸 Frühling</button>
+          <button type="button" data-val="summer">☀️ Sommer</button>
+          <button type="button" data-val="autumn">🍂 Herbst</button>
+          <button type="button" data-val="winter">❄️ Winter</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
@@ -404,26 +765,179 @@
 </section>
 
 <script>
-/* ---------- Tab-Navigation ---------- */
+/* ---------- Tab-Navigation (merkt sich zuletzt geöffneten Bereich) ---------- */
 const tabs = [
-  {id:'sec-weekdays', label:'📅 Wochentage'},
-  {id:'sec-months', label:'🌸 Monate'},
-  {id:'sec-clock', label:'🕒 Uhrzeit'}
+  {id:'sec-weekdays', icon:'📅', label:'Wochentage'},
+  {id:'sec-months', icon:'🌸', label:'Monate'},
+  {id:'sec-clock', icon:'🕒', label:'Uhrzeit'},
+  {id:'sec-mixed', icon:'🔀', label:'Gemischt'},
+  {id:'sec-settings', icon:'⚙️', label:'Einstellungen'}
 ];
+let lastTabId = null;
+try{ lastTabId = localStorage.getItem('zeitdetektiv-lasttab'); }catch(e){}
+const startIndex = Math.max(0, tabs.findIndex(t=>t.id===lastTabId));
 const nav = document.getElementById('tabnav');
+const navButtons = [];
 tabs.forEach((t,i)=>{
   const b = document.createElement('button');
-  b.textContent = t.label;
-  if(i===0) b.classList.add('active');
+  b.innerHTML = `<span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span>`;
+  if(i===startIndex) b.classList.add('active');
   b.onclick = ()=>{
     document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
     document.getElementById(t.id).classList.add('active');
+    try{ localStorage.setItem('zeitdetektiv-lasttab', t.id); }catch(e){}
   };
+  navButtons.push(b);
   nav.appendChild(b);
 });
-document.getElementById(tabs[0].id).classList.add('active');
+document.getElementById(tabs[startIndex].id).classList.add('active');
+
+/* ---------- Sound- & Vibrations-Feedback ---------- */
+let audioCtx = null;
+function ensureAudioCtx(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
+  }
+  return audioCtx;
+}
+function playTone(freq, duration, type){
+  const ctx = ensureAudioCtx();
+  if(!ctx) return;
+  try{
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  }catch(e){}
+}
+function feedbackCorrect(){
+  playTone(880, 0.15);
+  setTimeout(()=>playTone(1175, 0.18), 110);
+  if(navigator.vibrate){ try{ navigator.vibrate(35); }catch(e){} }
+}
+function feedbackWrong(){
+  playTone(220, 0.28, 'triangle');
+  if(navigator.vibrate){ try{ navigator.vibrate([50,40,50]); }catch(e){} }
+}
+function feedbackRoundComplete(){
+  playTone(660, 0.13); 
+  setTimeout(()=>playTone(880,0.13), 100);
+  setTimeout(()=>playTone(1175,0.22), 200);
+  if(navigator.vibrate){ try{ navigator.vibrate([30,30,30,30,60]); }catch(e){} }
+}
+function launchConfetti(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = '';
+  const emojis = ['🎉','⭐','✨','🎊','🌟'];
+  for(let i=0;i<22;i++){
+    const span = document.createElement('span');
+    span.className = 'confetti-piece';
+    span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    span.style.left = (Math.random()*94)+'%';
+    span.style.animationDelay = (Math.random()*0.5)+'s';
+    span.style.fontSize = (1+Math.random()*0.8)+'rem';
+    el.appendChild(span);
+  }
+}
+
+/* ---------- Globale Einstellungen (Sprachausgabe, Barrierefreiheit, Uhr-Format, Theme) ---------- */
+let ttsMode = 'off';        // 'off' | 'auto'
+let fontSizeMode = 'normal'; // 'normal' | 'large'
+let contrastMode = 'normal'; // 'normal' | 'high'
+let clockFormat = '24h';     // '24h' | '12h'
+let themeMode = 'auto';      // 'auto' | 'spring' | 'summer' | 'autumn' | 'winter'
+
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'de-DE';
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+  }catch(e){}
+}
+function speakCurrentQuestion(prefix){
+  const qEl = document.getElementById(prefix+'-question');
+  if(!qEl) return;
+  let spoken = qEl.textContent || '';
+  const periodEl = document.getElementById(prefix+'-period');
+  if(periodEl && periodEl.style.display !== 'none' && periodEl.textContent){
+    spoken += '. ' + periodEl.textContent.replace(/[☀️🌆]/g,'').trim();
+  }
+  speak(spoken);
+}
+
+function getSeasonFromDate(d){
+  const m = d.getMonth()+1;
+  if(m===12||m===1||m===2) return 'winter';
+  if(m>=3&&m<=5) return 'spring';
+  if(m>=6&&m<=8) return 'summer';
+  return 'autumn';
+}
+function applySettings(){
+  document.documentElement.classList.toggle('font-large', fontSizeMode==='large');
+  document.body.classList.toggle('high-contrast', contrastMode==='high');
+  const effectiveTheme = themeMode==='auto' ? getSeasonFromDate(new Date()) : themeMode;
+  document.body.classList.remove('theme-spring','theme-summer','theme-autumn','theme-winter');
+  if(effectiveTheme!=='spring'){
+    document.body.classList.add('theme-'+effectiveTheme);
+  }
+}
+function saveSettings(){
+  try{
+    localStorage.setItem('zeitdetektiv-settings', JSON.stringify({
+      tts:ttsMode, fontSize:fontSizeMode, contrast:contrastMode, clockFormat, theme:themeMode
+    }));
+  }catch(e){}
+}
+function loadSettings(){
+  try{
+    const saved = JSON.parse(localStorage.getItem('zeitdetektiv-settings') || '{}');
+    if(saved.tts) ttsMode = saved.tts;
+    if(saved.fontSize) fontSizeMode = saved.fontSize;
+    if(saved.contrast) contrastMode = saved.contrast;
+    if(saved.clockFormat) clockFormat = saved.clockFormat;
+    if(saved.theme) themeMode = saved.theme;
+  }catch(e){}
+  applySettings();
+}
+loadSettings();
+
+function setupSettingsUI(){
+  function wireGroup(containerId, getter, setter){
+    document.querySelectorAll('#'+containerId+' button').forEach(b=>{
+      b.classList.toggle('active', b.dataset.val === getter());
+      b.onclick = ()=>{
+        document.querySelectorAll('#'+containerId+' button').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        setter(b.dataset.val);
+        applySettings();
+        saveSettings();
+      };
+    });
+  }
+  wireGroup('settingTTS', ()=>ttsMode, v=>{ttsMode=v;});
+  wireGroup('settingFontSize', ()=>fontSizeMode, v=>{fontSizeMode=v;});
+  wireGroup('settingContrast', ()=>contrastMode, v=>{contrastMode=v;});
+  wireGroup('settingClockFormat', ()=>clockFormat, v=>{clockFormat=v;});
+  wireGroup('settingTheme', ()=>themeMode, v=>{themeMode=v;});
+}
+setupSettingsUI();
+
+document.querySelectorAll('.tts-btn').forEach(btn=>{
+  const prefix = btn.id.replace('-tts-btn','');
+  btn.onclick = ()=> speakCurrentQuestion(prefix);
+});
 
 function shuffle(arr){
   const a=[...arr];
@@ -518,14 +1032,24 @@ function makeQuiz(cfg){
   // cfg: {prefix, total, genQuestion(), hint(q), parentQuestionText(q), moduleLabel}
   let score = 0, qNum = 1, currentAnswerLocked = false;
   let usedKeys = new Set();
+  let wrongQueue = [];
+  let reviewIndex = 0;
+  let inReview = false;
   const scoreEl = document.getElementById(cfg.prefix+'-score');
   const numEl = document.getElementById(cfg.prefix+'-num');
+  const progressLabelEl = document.getElementById(cfg.prefix+'-progress-label');
+  const progressBarEl = document.getElementById(cfg.prefix+'-progress');
   const qEl = document.getElementById(cfg.prefix+'-question');
   const optEl = document.getElementById(cfg.prefix+'-options');
   const fbEl = document.getElementById(cfg.prefix+'-feedback');
   const nextBtn = document.getElementById(cfg.prefix+'-next');
   const hintBtn = document.getElementById(cfg.prefix+'-hint-btn');
   const hintTextEl = document.getElementById(cfg.prefix+'-hint-text');
+  const quizBodyEl = document.getElementById(cfg.prefix+'-quiz-body');
+  const completeEl = document.getElementById(cfg.prefix+'-complete');
+  const completeTextEl = document.getElementById(cfg.prefix+'-complete-text');
+  const starsEl = document.getElementById(cfg.prefix+'-stars');
+  const restartBtn = document.getElementById(cfg.prefix+'-restart');
 
   if(hintBtn){
     hintBtn.onclick = ()=>{
@@ -543,18 +1067,37 @@ function makeQuiz(cfg){
     return q;
   }
 
-  function render(){
+  function updateProgress(){
+    if(progressLabelEl){
+      if(inReview){
+        progressLabelEl.innerHTML = `🔁 Wiederholung <b>${reviewIndex+1}</b>/${wrongQueue.length}`;
+      } else {
+        progressLabelEl.innerHTML = `Frage <b id="${cfg.prefix}-num">${qNum}</b>/${cfg.total}`;
+      }
+    }
+    if(progressBarEl){
+      const pct = inReview
+        ? Math.round(((reviewIndex+1)/wrongQueue.length)*100)
+        : Math.round((qNum/cfg.total)*100);
+      progressBarEl.style.width = pct + '%';
+      progressBarEl.classList.toggle('review', inReview);
+    }
+  }
+
+  function displayQuestion(q){
     currentAnswerLocked = false;
     fbEl.textContent = '';
     fbEl.className = 'feedback';
     nextBtn.style.display = 'none';
-    numEl.textContent = qNum;
-    const q = genUniqueQuestion();
+    updateProgress();
     qEl.textContent = q.text;
     if(cfg.onQuestion) cfg.onQuestion(q);
     if(hintTextEl){
       hintTextEl.textContent = cfg.hint ? cfg.hint(q) : '';
       hintTextEl.style.display = 'none';
+    }
+    if(ttsMode==='auto'){
+      speakCurrentQuestion(cfg.prefix);
     }
     optEl.innerHTML = '';
     const correctOpt = q.options.find(o=>o.correct);
@@ -568,8 +1111,11 @@ function makeQuiz(cfg){
           b.classList.add('correct');
           fbEl.textContent = '🎉 Richtig!';
           fbEl.className = 'feedback ok';
-          score++;
-          scoreEl.textContent = score;
+          if(!inReview){
+            score++;
+            scoreEl.textContent = score;
+          }
+          feedbackCorrect();
         } else {
           b.classList.add('wrong');
           fbEl.textContent = '❌ Nicht ganz — die richtige Antwort ist markiert.';
@@ -580,6 +1126,10 @@ function makeQuiz(cfg){
           if(hintTextEl && hintTextEl.textContent){
             hintTextEl.style.display = 'block';
           }
+          if(!inReview){
+            wrongQueue.push(q);
+          }
+          feedbackWrong();
         }
         const questionForParent = cfg.parentQuestionText ? cfg.parentQuestionText(q) : q.text;
         logParentEntry(cfg.moduleLabel || cfg.prefix, questionForParent, correctOpt.label, opt.label, !!opt.correct);
@@ -588,17 +1138,66 @@ function makeQuiz(cfg){
       optEl.appendChild(b);
     });
   }
+
+  function renderNext(){
+    inReview = false;
+    displayQuestion(genUniqueQuestion());
+  }
+  function renderReview(){
+    inReview = true;
+    displayQuestion(wrongQueue[reviewIndex]);
+  }
+
+  function showComplete(){
+    quizBodyEl.style.display = 'none';
+    completeEl.style.display = 'block';
+    const pct = score / cfg.total;
+    const starCount = pct >= 0.9 ? 3 : (pct >= 0.6 ? 2 : 1);
+    starsEl.textContent = '⭐'.repeat(starCount) + '☆'.repeat(3-starCount);
+    completeTextEl.textContent = `Du hast ${score} von ${cfg.total} richtig beantwortet!`;
+    launchConfetti(cfg.prefix+'-confetti');
+    feedbackRoundComplete();
+  }
+
   nextBtn.onclick = ()=>{
+    if(inReview){
+      reviewIndex++;
+      if(reviewIndex < wrongQueue.length){
+        renderReview();
+      } else {
+        showComplete();
+      }
+      return;
+    }
     qNum++;
     if(qNum > cfg.total){
+      if(wrongQueue.length > 0){
+        reviewIndex = 0;
+        renderReview();
+      } else {
+        showComplete();
+      }
+    } else {
+      renderNext();
+    }
+  };
+
+  if(restartBtn){
+    restartBtn.onclick = ()=>{
       qNum = 1;
       score = 0;
-      scoreEl.textContent = 0;
       usedKeys = new Set();
-    }
-    render();
-  };
-  render();
+      wrongQueue = [];
+      reviewIndex = 0;
+      inReview = false;
+      scoreEl.textContent = 0;
+      completeEl.style.display = 'none';
+      quizBodyEl.style.display = 'block';
+      renderNext();
+    };
+  }
+
+  renderNext();
 }
 
 /* ---------- Wochentage Quiz ---------- */
@@ -608,51 +1207,64 @@ const WD_RELATIVE_TERMS = [
   {label:'morgen', offset:1},
   {label:'übermorgen', offset:2}
 ];
+const WD_RELATIVE_TERMS_EASY = WD_RELATIVE_TERMS.filter(t=>Math.abs(t.offset)===1);
+let wdLevel = 1;
+document.querySelectorAll('#wdLevel button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#wdLevel button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    wdLevel = parseInt(b.dataset.lvl,10);
+  };
+});
+function wdGenQuestion(level){
+  const availableTypes = level===1 ? [0,3] : [0,1,2,3];
+  const type = availableTypes[Math.floor(Math.random()*availableTypes.length)];
+  const i = Math.floor(Math.random()*7);
+  let text, correctLabel, term;
+  if(type===0){
+    text = `Welcher Tag kommt nach ${WEEKDAYS[i]}?`;
+    correctLabel = WEEKDAYS[(i+1)%7];
+  } else if(type===1){
+    text = `Welcher Tag war vor ${WEEKDAYS[i]}?`;
+    correctLabel = WEEKDAYS[(i+6)%7];
+  } else if(type===2){
+    text = `Der wievielte Tag der Woche ist der ${WEEKDAYS[i]}?`;
+    correctLabel = String(i+1);
+  } else {
+    const termPool = level===1 ? WD_RELATIVE_TERMS_EASY : WD_RELATIVE_TERMS;
+    term = termPool[Math.floor(Math.random()*termPool.length)];
+    const dayIdx = ((i + term.offset) % 7 + 7) % 7;
+    text = `Wenn heute ${WEEKDAYS[i]} ist, welcher Tag ist dann ${term.label}?`;
+    correctLabel = WEEKDAYS[dayIdx];
+  }
+  let optionLabels;
+  if(type===2){
+    const wrongNums = new Set();
+    while(wrongNums.size<3){
+      const n = Math.floor(Math.random()*7)+1;
+      if(n!==(i+1)) wrongNums.add(n);
+    }
+    optionLabels = shuffle([correctLabel, ...[...wrongNums].map(String)]);
+  } else {
+    const wrongIdx = pickWrongOptions(WEEKDAYS.indexOf(correctLabel), WEEKDAYS, 3);
+    optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>WEEKDAYS[w])]);
+  }
+  return {
+    text,
+    _type: type,
+    options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+  };
+}
+function wdHint(q){
+  if(q._type===0) return 'Denk an die Reihenfolge: Montag → Dienstag → Mittwoch → Donnerstag → Freitag → Samstag → Sonntag. Nach Sonntag geht es wieder bei Montag los!';
+  if(q._type===1) return 'Geh die Woche rückwärts durch: Sonntag → Samstag → Freitag → Donnerstag → Mittwoch → Dienstag → Montag.';
+  if(q._type===2) return 'Zähl ab Montag durch: Montag=1, Dienstag=2, Mittwoch=3, Donnerstag=4, Freitag=5, Samstag=6, Sonntag=7.';
+  return 'Merk dir die Kette: Vorgestern → Gestern → Heute → Morgen → Übermorgen. "Gestern" und "vorgestern" liegen in der Vergangenheit, "morgen" und "übermorgen" in der Zukunft.';
+}
 makeQuiz({
   prefix:'wd', total:20, moduleLabel:'📅 Wochentage',
-  genQuestion(){
-    const type = Math.floor(Math.random()*4);
-    const i = Math.floor(Math.random()*7);
-    let text, correctLabel, term;
-    if(type===0){
-      text = `Welcher Tag kommt nach ${WEEKDAYS[i]}?`;
-      correctLabel = WEEKDAYS[(i+1)%7];
-    } else if(type===1){
-      text = `Welcher Tag war vor ${WEEKDAYS[i]}?`;
-      correctLabel = WEEKDAYS[(i+6)%7];
-    } else if(type===2){
-      text = `Der wievielte Tag der Woche ist der ${WEEKDAYS[i]}?`;
-      correctLabel = String(i+1);
-    } else {
-      term = WD_RELATIVE_TERMS[Math.floor(Math.random()*WD_RELATIVE_TERMS.length)];
-      const dayIdx = ((i + term.offset) % 7 + 7) % 7;
-      text = `Wenn heute ${WEEKDAYS[i]} ist, welcher Tag ist dann ${term.label}?`;
-      correctLabel = WEEKDAYS[dayIdx];
-    }
-    let optionLabels;
-    if(type===2){
-      const wrongNums = new Set();
-      while(wrongNums.size<3){
-        const n = Math.floor(Math.random()*7)+1;
-        if(n!==(i+1)) wrongNums.add(n);
-      }
-      optionLabels = shuffle([correctLabel, ...[...wrongNums].map(String)]);
-    } else {
-      const wrongIdx = pickWrongOptions(WEEKDAYS.indexOf(correctLabel), WEEKDAYS, 3);
-      optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>WEEKDAYS[w])]);
-    }
-    return {
-      text,
-      _type: type,
-      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
-    };
-  },
-  hint(q){
-    if(q._type===0) return 'Denk an die Reihenfolge: Montag → Dienstag → Mittwoch → Donnerstag → Freitag → Samstag → Sonntag. Nach Sonntag geht es wieder bei Montag los!';
-    if(q._type===1) return 'Geh die Woche rückwärts durch: Sonntag → Samstag → Freitag → Donnerstag → Mittwoch → Dienstag → Montag.';
-    if(q._type===2) return 'Zähl ab Montag durch: Montag=1, Dienstag=2, Mittwoch=3, Donnerstag=4, Freitag=5, Samstag=6, Sonntag=7.';
-    return 'Merk dir die Kette: Vorgestern → Gestern → Heute → Morgen → Übermorgen. "Gestern" und "vorgestern" liegen in der Vergangenheit, "morgen" und "übermorgen" in der Zukunft.';
-  }
+  genQuestion(){ return wdGenQuestion(wdLevel); },
+  hint: wdHint
 });
 
 /* ---------- Monate Quiz ---------- */
@@ -660,80 +1272,115 @@ const MONTH_DAYS = {
   "Januar":31, "Februar":28, "März":31, "April":30, "Mai":31, "Juni":30,
   "Juli":31, "August":31, "September":30, "Oktober":31, "November":30, "Dezember":31
 };
+let moLevel = 1;
+document.querySelectorAll('#moLevel button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#moLevel button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    moLevel = parseInt(b.dataset.lvl,10);
+  };
+});
+function moGenQuestion(level){
+  const availableTypes = level===1 ? [0,2,5] : [0,1,2,3,4,5];
+  const type = availableTypes[Math.floor(Math.random()*availableTypes.length)];
+  const i = Math.floor(Math.random()*12);
+  let text, correctLabel, pool, key;
+  if(type===0){
+    text = `Welcher Monat kommt nach ${MONTHS[i]}?`;
+    correctLabel = MONTHS[(i+1)%12];
+    pool = MONTHS;
+  } else if(type===1){
+    text = `Welcher Monat war vor ${MONTHS[i]}?`;
+    correctLabel = MONTHS[(i+11)%12];
+    pool = MONTHS;
+  } else if(type===2){
+    text = `In welcher Jahreszeit liegt der ${MONTHS[i]}?`;
+    correctLabel = seasonOf(MONTHS[i]);
+    pool = Object.keys(SEASONS);
+  } else if(type===3){
+    const days = MONTH_DAYS[MONTHS[i]];
+    text = MONTHS[i]==='Februar'
+      ? `Wie viele Tage hat der ${MONTHS[i]} normalerweise?`
+      : `Wie viele Tage hat der ${MONTHS[i]}?`;
+    correctLabel = String(days);
+    pool = ["28","29","30","31"];
+    key = `days-${MONTHS[i]}`;
+  } else if(type===4){
+    text = `Der wievielte Monat des Jahres ist der ${MONTHS[i]}?`;
+    correctLabel = String(i+1);
+    pool = Array.from({length:12}, (_,n)=>String(n+1));
+  } else {
+    const seasons = Object.keys(SEASONS);
+    const season = seasons[Math.floor(Math.random()*seasons.length)];
+    const seasonMonths = SEASONS[season];
+    correctLabel = seasonMonths[Math.floor(Math.random()*seasonMonths.length)];
+    text = `Welcher Monat gehört zum ${season}?`;
+    pool = MONTHS.filter(m=>!seasonMonths.includes(m));
+    pool = [correctLabel, ...pool]; // damit indexOf funktioniert und Distraktoren nie aus derselben Jahreszeit kommen
+    key = `season2month-${season}-${correctLabel}`;
+  }
+  const poolIdx = pool.indexOf(correctLabel);
+  const wrongIdx = pickWrongOptions(poolIdx, pool, 3);
+  const optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>pool[w])]);
+  return {
+    text,
+    key: key || text,
+    _type: type,
+    options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+  };
+}
+function moHint(q){
+  if(q._type===0) return 'Die Monate gehen der Reihe nach: Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember — und dann wieder von vorne.';
+  if(q._type===1) return 'Geh die Monatsliste rückwärts durch, dann findest du den Monat davor.';
+  if(q._type===2) return 'Winter: Dezember, Januar, Februar · Frühling: März, April, Mai · Sommer: Juni, Juli, August · Herbst: September, Oktober, November.';
+  if(q._type===3) return 'Merkspruch: "30 Tage hat September, April, Juni und November. Alle anderen haben 31, nur der Februar hat 28 (im Schaltjahr 29)."';
+  if(q._type===4) return 'Zähl ab Januar durch: Januar=1, Februar=2, März=3, April=4, Mai=5, Juni=6, Juli=7, August=8, September=9, Oktober=10, November=11, Dezember=12.';
+  return 'Winter: Dezember, Januar, Februar · Frühling: März, April, Mai · Sommer: Juni, Juli, August · Herbst: September, Oktober, November.';
+}
 makeQuiz({
   prefix:'mo', total:20, moduleLabel:'🌸 Monate',
-  genQuestion(){
-    const type = Math.floor(Math.random()*4);
-    const i = Math.floor(Math.random()*12);
-    let text, correctLabel, pool;
-    if(type===0){
-      text = `Welcher Monat kommt nach ${MONTHS[i]}?`;
-      correctLabel = MONTHS[(i+1)%12];
-      pool = MONTHS;
-    } else if(type===1){
-      text = `Welcher Monat war vor ${MONTHS[i]}?`;
-      correctLabel = MONTHS[(i+11)%12];
-      pool = MONTHS;
-    } else if(type===2){
-      text = `In welcher Jahreszeit liegt der ${MONTHS[i]}?`;
-      correctLabel = seasonOf(MONTHS[i]);
-      pool = Object.keys(SEASONS);
-    } else {
-      const days = MONTH_DAYS[MONTHS[i]];
-      text = MONTHS[i]==='Februar'
-        ? `Wie viele Tage hat der ${MONTHS[i]} normalerweise?`
-        : `Wie viele Tage hat der ${MONTHS[i]}?`;
-      correctLabel = String(days);
-      pool = ["28","29","30","31"];
-    }
-    const poolIdx = pool.indexOf(correctLabel);
-    const wrongIdx = pickWrongOptions(poolIdx, pool, 3);
-    const optionLabels = shuffle([correctLabel, ...wrongIdx.map(w=>pool[w])]);
-    return {
-      text,
-      key: type===3 ? `days-${MONTHS[i]}` : text,
-      _type: type,
-      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
-    };
-  },
-  hint(q){
-    if(q._type===0) return 'Die Monate gehen der Reihe nach: Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember — und dann wieder von vorne.';
-    if(q._type===1) return 'Geh die Monatsliste rückwärts durch, dann findest du den Monat davor.';
-    if(q._type===2) return 'Winter: Dezember, Januar, Februar · Frühling: März, April, Mai · Sommer: Juni, Juli, August · Herbst: September, Oktober, November.';
-    return 'Merkspruch: "30 Tage hat September, April, Juni und November. Alle anderen haben 31, nur der Februar hat 28 (im Schaltjahr 29)."';
-  }
+  genQuestion(){ return moGenQuestion(moLevel); },
+  hint: moHint
 });
 
-/* ---------- Uhr: Zeichnen ---------- */
-const clockNumbers = document.getElementById('clockNumbers');
-for(let n=1;n<=12;n++){
-  const angle = (n*30 - 90) * Math.PI/180;
-  const x = 100 + 78*Math.cos(angle);
-  const y = 100 + 78*Math.sin(angle);
-  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t.setAttribute('x', x);
-  t.setAttribute('y', y+5);
-  t.setAttribute('text-anchor','middle');
-  t.setAttribute('font-size','14');
-  t.setAttribute('font-weight','bold');
-  t.setAttribute('fill','#3b2f5e');
-  t.textContent = n;
-  clockNumbers.appendChild(t);
+/* ---------- Uhr: Zeichnen (generalisiert für mehrere Zifferblätter) ---------- */
+function buildClockNumbers(containerId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  for(let n=1;n<=12;n++){
+    const angle = (n*30 - 90) * Math.PI/180;
+    const x = 100 + 78*Math.cos(angle);
+    const y = 100 + 78*Math.sin(angle);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', x);
+    t.setAttribute('y', y+5);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','14');
+    t.setAttribute('font-weight','bold');
+    t.setAttribute('fill','#3b2f5e');
+    t.textContent = n;
+    container.appendChild(t);
+  }
 }
-const hourHand = document.getElementById('hourHand');
-const minuteHand = document.getElementById('minuteHand');
-function setClock(hour, minute){
+function positionClockHands(hourHandEl, minuteHandEl, hour, minute){
   const hourAngle = ((hour%12) + minute/60) * 30 - 90;
   const minuteAngle = minute*6 - 90;
   const hx = 100 + 45*Math.cos(hourAngle*Math.PI/180);
   const hy = 100 + 45*Math.sin(hourAngle*Math.PI/180);
   const mx = 100 + 65*Math.cos(minuteAngle*Math.PI/180);
   const my = 100 + 65*Math.sin(minuteAngle*Math.PI/180);
-  hourHand.setAttribute('x2', hx);
-  hourHand.setAttribute('y2', hy);
-  minuteHand.setAttribute('x2', mx);
-  minuteHand.setAttribute('y2', my);
+  hourHandEl.setAttribute('x2', hx);
+  hourHandEl.setAttribute('y2', hy);
+  minuteHandEl.setAttribute('x2', mx);
+  minuteHandEl.setAttribute('y2', my);
 }
+buildClockNumbers('clockNumbers');
+buildClockNumbers('mx-clockNumbers');
+buildClockNumbers('cl-set-clockNumbers');
+const hourHand = document.getElementById('hourHand');
+const minuteHand = document.getElementById('minuteHand');
+function setClock(hour, minute){ positionClockHands(hourHand, minuteHand, hour, minute); }
+
 let clockLevel = 1;
 document.querySelectorAll('#clockLevel button').forEach(b=>{
   b.onclick = ()=>{
@@ -752,51 +1399,263 @@ function to24Hour(hour12, period){
   return hour12===12 ? 12 : hour12+12;
 }
 const clPeriodEl = document.getElementById('cl-period');
+
+function clGenQuestion(level, format){
+  const hour = Math.floor(Math.random()*12)+1;
+  const period = Math.random()<0.5 ? 'vormittag' : 'nachmittag';
+  const minute = level===1 ? (Math.random()<0.5 ? 0 : 30) : Math.floor(Math.random()*12)*5;
+  let correctLabel, key;
+  if(format==='24h'){
+    const hour24 = to24Hour(hour, period);
+    correctLabel = formatTime(hour24, minute);
+    key = `${hour}-${minute}-${period}-24h`;
+  } else {
+    correctLabel = `${hour}:${String(minute).padStart(2,'0')} Uhr`;
+    key = `${hour}-${minute}-12h`;
+  }
+  const wrongLabels = new Set();
+  while(wrongLabels.size<3){
+    let lbl;
+    if(format==='24h'){
+      const wh24 = Math.floor(Math.random()*24);
+      const wm = level===1 ? (Math.random()<0.5?0:30) : Math.floor(Math.random()*12)*5;
+      lbl = formatTime(wh24, wm);
+    } else {
+      const wh = Math.floor(Math.random()*12)+1;
+      const wm = level===1 ? (Math.random()<0.5?0:30) : Math.floor(Math.random()*12)*5;
+      lbl = `${wh}:${String(wm).padStart(2,'0')} Uhr`;
+    }
+    if(lbl!==correctLabel) wrongLabels.add(lbl);
+  }
+  const optionLabels = shuffle([correctLabel, ...wrongLabels]);
+  return {
+    text:'', // wird durch das Zifferblatt oben ersetzt
+    key,
+    _hour: hour, _minute: minute, _period: period,
+    _hour24: format==='24h' ? to24Hour(hour, period) : null,
+    _format: format,
+    options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
+  };
+}
+function clHint(q){
+  const base = 'Der kurze, dicke Zeiger zeigt die Stunde. Der lange, dünne Zeiger zeigt die Minuten: Steht er auf der 12, ist es eine volle Stunde, steht er auf der 6, ist eine halbe Stunde vergangen.';
+  if(q._format!=='24h') return base;
+  if(q._period==='vormittag'){
+    return base + ` Vormittags bleibt die Stundenzahl gleich: ${q._hour} Uhr auf der Uhr = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
+  }
+  return base + ` Nachmittags rechnest du +12: ${q._hour} Uhr auf der Uhr + 12 = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
+}
+function clParentQuestionText(q){
+  if(q._format!=='24h'){
+    return `Welche Uhrzeit zeigt die Uhr? (angezeigt: ${q._hour}:${String(q._minute).padStart(2,'0')} Uhr, 12h-Format)`;
+  }
+  const periodLabel = q._period==='vormittag' ? 'vormittags' : 'nachmittags';
+  return `Welche Uhrzeit zeigt die Uhr? (angezeigt: ${q._hour} Uhr ${periodLabel}, gefragt im 24h-Format)`;
+}
 makeQuiz({
   prefix:'cl', total:20, moduleLabel:'🕒 Uhrzeit',
-  genQuestion(){
-    const hour = Math.floor(Math.random()*12)+1;
-    const period = Math.random()<0.5 ? 'vormittag' : 'nachmittag';
-    let minute;
-    if(clockLevel===1){
-      minute = Math.random()<0.5 ? 0 : 30;
-    } else {
-      minute = Math.floor(Math.random()*12)*5;
-    }
-    const hour24 = to24Hour(hour, period);
-    const correctLabel = formatTime(hour24, minute);
-    const wrongLabels = new Set();
-    while(wrongLabels.size<3){
-      const wh24 = Math.floor(Math.random()*24);
-      const wm = clockLevel===1 ? (Math.random()<0.5?0:30) : Math.floor(Math.random()*12)*5;
-      const lbl = formatTime(wh24, wm);
-      if(lbl!==correctLabel) wrongLabels.add(lbl);
-    }
-    const optionLabels = shuffle([correctLabel, ...wrongLabels]);
-    return {
-      text:'', // wird durch das Zifferblatt oben ersetzt
-      key: `${hour}-${minute}-${period}`,
-      _hour: hour, _minute: minute, _period: period, _hour24: hour24,
-      options: optionLabels.map(l=>({label:l, correct:l===correctLabel}))
-    };
-  },
+  genQuestion(){ return clGenQuestion(clockLevel, clockFormat); },
   onQuestion(q){
     setClock(q._hour, q._minute);
-    clPeriodEl.textContent = q._period==='vormittag' ? '☀️ Vormittags' : '🌆 Nachmittags';
-  },
-  hint(q){
-    const base = 'Der kurze, dicke Zeiger zeigt die Stunde. Der lange, dünne Zeiger zeigt die Minuten: Steht er auf der 12, ist es eine volle Stunde, steht er auf der 6, ist eine halbe Stunde vergangen.';
-    if(q._period==='vormittag'){
-      return base + ` Vormittags bleibt die Stundenzahl gleich: ${q._hour} Uhr auf der Uhr = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
+    if(q._format==='24h'){
+      clPeriodEl.style.display = 'block';
+      clPeriodEl.textContent = q._period==='vormittag' ? '☀️ Vormittags' : '🌆 Nachmittags';
+    } else {
+      clPeriodEl.style.display = 'none';
     }
-    return base + ` Nachmittags rechnest du +12: ${q._hour} Uhr auf der Uhr + 12 = ${String(q._hour24).padStart(2,'0')}:00 Uhr.`;
   },
-  parentQuestionText(q){
-    const periodLabel = q._period==='vormittag' ? 'vormittags' : 'nachmittags';
-    return `Welche Uhrzeit zeigt die Uhr? (angezeigt: ${q._hour} Uhr ${periodLabel}, gefragt im 24h-Format)`;
-  }
+  hint: clHint,
+  parentQuestionText: clParentQuestionText
 });
 document.getElementById('cl-question').textContent = 'Welche Uhrzeit zeigt die Uhr?';
+
+/* ---------- Uhr: Modus Ablesen / Zeiger selbst stellen ---------- */
+document.querySelectorAll('#clockMode button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#clockMode button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const mode = b.dataset.val;
+    document.getElementById('cl-quiz-body').style.display = mode==='read' ? 'block' : 'none';
+    document.getElementById('cl-complete').style.display = 'none';
+    document.getElementById('cl-set-body').style.display = mode==='set' ? 'block' : 'none';
+  };
+});
+
+function svgPointFromEvent(svgEl, evt){
+  const pt = svgEl.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  const ctm = svgEl.getScreenCTM();
+  if(!ctm) return {x:100,y:100};
+  const loc = pt.matrixTransform(ctm.inverse());
+  return {x:loc.x, y:loc.y};
+}
+function angleFromCenter(x,y){
+  const dx = x-100, dy = y-100;
+  let deg = Math.atan2(dx, -dy) * 180/Math.PI;
+  if(deg<0) deg += 360;
+  return deg;
+}
+function pointOnCircle(angleDeg, radius){
+  return {
+    x: 100 + radius*Math.cos(angleDeg*Math.PI/180),
+    y: 100 + radius*Math.sin(angleDeg*Math.PI/180)
+  };
+}
+function setupInteractiveClock(prefix){
+  const svg = document.getElementById(prefix+'-clockface');
+  const hourHandEl = document.getElementById(prefix+'-hourHand');
+  const minuteHandEl = document.getElementById(prefix+'-minuteHand');
+  const hourKnobEl = document.getElementById(prefix+'-hourKnob');
+  const minuteKnobEl = document.getElementById(prefix+'-minuteKnob');
+  const targetEl = document.getElementById(prefix+'-target');
+  const feedbackEl = document.getElementById(prefix+'-feedback');
+  const checkBtn = document.getElementById(prefix+'-check');
+  const nextBtn = document.getElementById(prefix+'-next');
+  if(!svg || !hourHandEl || !minuteHandEl || !hourKnobEl || !minuteKnobEl) return;
+
+  let curHour = 12, curMinute = 0;
+  let targetHour = 12, targetMinute = 0, targetPeriod = 'vormittag';
+
+  function render(){
+    positionClockHands(hourHandEl, minuteHandEl, curHour, curMinute);
+    const hourAngleDeg = ((curHour%12) + curMinute/60) * 30 - 90;
+    const minuteAngleDeg = curMinute*6 - 90;
+    const hTip = pointOnCircle(hourAngleDeg, 45);
+    const mTip = pointOnCircle(minuteAngleDeg, 65);
+    hourKnobEl.setAttribute('cx', hTip.x);
+    hourKnobEl.setAttribute('cy', hTip.y);
+    minuteKnobEl.setAttribute('cx', mTip.x);
+    minuteKnobEl.setAttribute('cy', mTip.y);
+  }
+
+  function newChallenge(){
+    curHour = 12; curMinute = 0;
+    render();
+    targetHour = Math.floor(Math.random()*12)+1;
+    targetMinute = clockLevel===1 ? (Math.random()<0.5?0:30) : Math.floor(Math.random()*12)*5;
+    targetPeriod = Math.random()<0.5 ? 'vormittag' : 'nachmittag';
+    let label;
+    if(clockFormat==='24h'){
+      const h24 = to24Hour(targetHour, targetPeriod);
+      label = `Stelle die Uhr auf ${formatTime(h24, targetMinute)} (${targetPeriod==='vormittag'?'☀️ vormittags':'🌆 nachmittags'})`;
+    } else {
+      label = `Stelle die Uhr auf ${targetHour}:${String(targetMinute).padStart(2,'0')} Uhr`;
+    }
+    targetEl.textContent = label;
+    feedbackEl.textContent = '';
+    feedbackEl.className = 'feedback';
+    checkBtn.style.display = 'inline-block';
+    nextBtn.style.display = 'none';
+  }
+
+  function attachDrag(knobEl, isHour){
+    let dragging = false;
+    const onMove = (e)=>{
+      if(!dragging) return;
+      const p = svgPointFromEvent(svg, e);
+      const deg = angleFromCenter(p.x, p.y);
+      if(isHour){
+        let h = Math.round(deg/30) % 12;
+        if(h===0) h = 12;
+        curHour = h;
+      } else {
+        let m = Math.round(deg/6);
+        m = Math.round(m/5)*5 % 60;
+        curMinute = m;
+      }
+      render();
+    };
+    const endDrag = (e)=>{
+      if(!dragging) return;
+      dragging = false;
+      try{ knobEl.releasePointerCapture(e.pointerId); }catch(err){}
+    };
+    knobEl.addEventListener('pointerdown', (e)=>{
+      dragging = true;
+      try{ knobEl.setPointerCapture(e.pointerId); }catch(err){}
+      e.preventDefault();
+      onMove(e);
+    });
+    knobEl.addEventListener('pointermove', onMove);
+    knobEl.addEventListener('pointerup', endDrag);
+    knobEl.addEventListener('pointercancel', endDrag);
+  }
+  attachDrag(hourKnobEl, true);
+  attachDrag(minuteKnobEl, false);
+
+  checkBtn.onclick = ()=>{
+    const correct = (curHour%12) === (targetHour%12) && curMinute === targetMinute;
+    if(correct){
+      feedbackEl.textContent = '🎉 Richtig gestellt!';
+      feedbackEl.className = 'feedback ok';
+      feedbackCorrect();
+      checkBtn.style.display = 'none';
+      nextBtn.style.display = 'block';
+    } else {
+      feedbackEl.textContent = '❌ Noch nicht ganz richtig — schau dir Stunden- und Minutenzeiger nochmal an.';
+      feedbackEl.className = 'feedback no';
+      feedbackWrong();
+    }
+  };
+  nextBtn.onclick = newChallenge;
+
+  newChallenge();
+}
+setupInteractiveClock('cl-set');
+
+/* ---------- Gemischtes Quiz (Wochentage + Monate + Uhrzeit) ---------- */
+const mxHourHand = document.getElementById('mx-hourHand');
+const mxMinuteHand = document.getElementById('mx-minuteHand');
+const mxPeriodEl = document.getElementById('mx-period');
+const mxClockWrapEl = document.getElementById('mx-clock-wrap');
+function mxGenQuestion(){
+  const modules = ['weekday','month','clock'];
+  const module = modules[Math.floor(Math.random()*modules.length)];
+  let q;
+  if(module==='weekday'){
+    q = wdGenQuestion(wdLevel);
+  } else if(module==='month'){
+    q = moGenQuestion(moLevel);
+  } else {
+    q = clGenQuestion(clockLevel, clockFormat);
+  }
+  q._module = module;
+  q.key = module + ':' + (q.key || q.text);
+  return q;
+}
+function mxOnQuestion(q){
+  if(q._module==='clock'){
+    mxClockWrapEl.style.display = 'flex';
+    positionClockHands(mxHourHand, mxMinuteHand, q._hour, q._minute);
+    if(q._format==='24h'){
+      mxPeriodEl.style.display = 'block';
+      mxPeriodEl.textContent = q._period==='vormittag' ? '☀️ Vormittags' : '🌆 Nachmittags';
+    } else {
+      mxPeriodEl.style.display = 'none';
+    }
+    document.getElementById('mx-question').textContent = 'Welche Uhrzeit zeigt die Uhr?';
+  } else {
+    mxClockWrapEl.style.display = 'none';
+    mxPeriodEl.style.display = 'none';
+  }
+}
+function mxHint(q){
+  if(q._module==='weekday') return wdHint(q);
+  if(q._module==='month') return moHint(q);
+  return clHint(q);
+}
+function mxParentQuestionText(q){
+  if(q._module==='weekday') return '📅 ' + q.text;
+  if(q._module==='month') return '🌸 ' + q.text;
+  return '🕒 ' + clParentQuestionText(q);
+}
+makeQuiz({
+  prefix:'mx', total:20, moduleLabel:'🔀 Gemischt',
+  genQuestion: mxGenQuestion,
+  onQuestion: mxOnQuestion,
+  hint: mxHint,
+  parentQuestionText: mxParentQuestionText
+});
 
 /* ---------- PWA: Service Worker registrieren + Auto-Update ---------- */
 if('serviceWorker' in navigator){
